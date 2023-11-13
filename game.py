@@ -1,7 +1,7 @@
 import sys
 import pygame
 
-from models.planets import Planet
+from models.game_models import Planet, Spaceship, Sun
 
 
 MOVEMENT_EVENTS_KEYS = {pygame.K_DOWN, pygame.K_UP, pygame.K_RIGHT, pygame.K_LEFT}
@@ -13,28 +13,22 @@ class Game:
         pygame.display.set_caption("Test game")
         self.window = pygame.display.set_mode((640, 480))
         self.clock = pygame.time.Clock()
-        self.collision_area = pygame.Rect(50, 50, 300, 50)
-        self.planet = Planet([0, 0])
+        self.planet1 = Spaceship([0, 0], img="planet2")
+        self.sun = Sun([320, 240], img="sun")
 
     def run(self):
         while True:
             self.window.fill((0, 0, 0))
-            self.planet.update()
-            self.window.blit(self.planet.img, self.planet.render_pos)
+            self.planet1.update(*self.planet1.pos)
+            self.window.blit(self.planet1.img, self.planet1.render_pos)
+            self.window.blit(self.sun.img, self.sun.render_pos)
 
-            # Collision detection
-            if self.planet.surface().colliderect(self.collision_area):
-                pygame.draw.rect(self.window, (0, 100, 255), self.collision_area)
-            else:
-                pygame.draw.rect(self.window, (50, 50, 155), self.collision_area)
-
-            pygame.draw.rect(self.window, (155, 155, 155), self.planet.surface())
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN or pygame.KEYUP:
-                    self.planet.move(event)
+                    self.planet1.move(event)
 
             pygame.display.update()
             self.clock.tick(60)
