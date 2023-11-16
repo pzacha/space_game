@@ -3,7 +3,10 @@ import numpy as np
 
 
 class SpaceObject:
-    def __init__(self, pos: list = [160, 260], radius: int = 100, img: str = "planet1"):
+    def __init__(
+        self, id: int, pos: list = [160, 260], radius: int = 100, img: str = "planet1"
+    ):
+        self.id = id
         self.img = pygame.image.load(f"data/images/{img}.png")
         self.pos = pos
         self.radius = radius
