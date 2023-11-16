@@ -1,6 +1,5 @@
 import itertools
-
-from models.game_models import SpaceObject
+from typing import Optional
 
 
 class MassObject:
@@ -11,7 +10,10 @@ class MassObject:
     acceleration: tuple[float, float]
 
     def __init__(
-        self, mass: int, position: tuple[int, int], velocity: tuple[float, float]
+        self,
+        mass: int,
+        position: tuple[int, int],
+        velocity: tuple[float, float] = (0, 0),
     ):
         self.id = next(MassObject.cls_id)
         self.mass = mass
@@ -24,14 +26,22 @@ class ObjectCollection:
     objects: dict[int, MassObject]
 
     def __init__(self):
-        pass
+        self.objects = {}
 
     def create_object(
         self,
         mass: int,
         position: tuple[int, int],
-        velocity: tuple[float, float],
+        velocity: tuple[float, float] = (0, 0),
     ) -> int:
         object = MassObject(mass, position, velocity)
         self.objects[object.id] = object
         return object.id
+
+    def get_data(self, exclude: Optional[int] = None):
+        data = []
+        for obj in self.objects.items():
+            if obj.id == exclude:
+                continue
+            data.append([obj.mass, *obj.position])
+        return data
