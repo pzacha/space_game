@@ -1,47 +1,44 @@
 import itertools
-from typing import Optional
+
+import numpy as np
 
 
 class MassObject:
     cls_id = itertools.count()
+    id: int
     mass: int
-    position: tuple[float, float]
-    velocity: tuple[float, float]
-    acceleration: tuple[float, float]
+    position: np.array
+    velocity: np.array
 
     def __init__(
         self,
         mass: int,
-        position: tuple[int, int],
-        velocity: tuple[float, float] = (0, 0),
+        position: np.array,
+        velocity: np.array = np.array([0, 0]),
     ):
         self.id = next(MassObject.cls_id)
         self.mass = mass
         self.position = position
         self.velocity = velocity
 
+    def update_velocity(self, acceleration: np.array, timestamp: int):
+        self.velocity = self.velocity + acceleration * timestamp
+
+    def update_position(self, timestamp: int):
+        self.position = self.position + self.velocity * timestamp
+
 
 class ObjectCollection:
-    grav_const: float = 6.674 * 10 ** (-11)
-    objects: dict[int, MassObject]
+    objects: list[MassObject]
+    timestamp: int = 1  # Timestamp in seconds
 
     def __init__(self):
-        self.objects = {}
+        self.objects = []
 
     def create_object(
         self,
         mass: int,
-        position: tuple[int, int],
-        velocity: tuple[float, float] = (0, 0),
+        position: np.array,
+        velocity: np.array = np.array([0, 0]),
     ) -> int:
-        object = MassObject(mass, position, velocity)
-        self.objects[object.id] = object
-        return object.id
-
-    def get_data(self, exclude: Optional[int] = None):
-        data = []
-        for obj in self.objects.items():
-            if obj.id == exclude:
-                continue
-            data.append([obj.mass, *obj.position])
-        return data
+        self.objects.append(MassObject(mass, position, velocity))
