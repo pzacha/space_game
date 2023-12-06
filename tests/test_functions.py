@@ -6,7 +6,7 @@ from functions.math import (
     calc_distance,
     calc_force,
     get_vectorized_data,
-    update_data,
+    run_simulation_step,
 )
 
 
@@ -47,11 +47,7 @@ def test_calc_acceleration(obj_collection):
 
 @patch("functions.math.GRAV_CONST", 1)
 def test_update_data(obj_collection):
-    mass, x_pos, y_pos = get_vectorized_data(obj_collection)
-    dx, dy = calc_distance(x_pos, y_pos)
-    force_x, force_y = calc_force(mass, dx, dy)
-    a_x, a_y = calc_acceleration(force_x, force_y, mass)
-    update_data(obj_collection, a_x, a_y)
+    run_simulation_step(obj_collection)
     np.testing.assert_array_equal(
         obj_collection.objects[0].velocity, np.array([1, 0.25])
     )

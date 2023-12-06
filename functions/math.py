@@ -50,3 +50,11 @@ def update_data(obj_collection: ObjectCollection, a_x: np.array, a_y: np.array):
     for obj, val_x, val_y in zip(obj_collection.objects, a_x, a_y):
         obj.update_velocity(np.array([val_x, val_y]), obj_collection.timestamp)
         obj.update_position(obj_collection.timestamp)
+
+
+def run_simulation_step(obj_collection: ObjectCollection):
+    mass, x_pos, y_pos = get_vectorized_data(obj_collection)
+    dx, dy = calc_distance(x_pos, y_pos)
+    force_x, force_y = calc_force(mass, dx, dy)
+    a_x, a_y = calc_acceleration(force_x, force_y, mass)
+    update_data(obj_collection, a_x, a_y)
