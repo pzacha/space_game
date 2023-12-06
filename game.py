@@ -1,7 +1,7 @@
 import sys
 import pygame
 
-from models.game_models import Planet, Spaceship, Sun
+from models.game_models import Spaceship, Sun
 
 
 MOVEMENT_EVENTS_KEYS = {pygame.K_DOWN, pygame.K_UP, pygame.K_RIGHT, pygame.K_LEFT}
@@ -11,7 +11,7 @@ class Game:
     def __init__(self) -> None:
         pygame.init()
         pygame.display.set_caption("Test game")
-        self.window = pygame.display.set_mode((640, 480))
+        self.window = pygame.display.set_mode((640, 640))
         self.clock = pygame.time.Clock()
         self.planet1 = Spaceship([0, 0], img="planet2")
         self.sun = Sun([320, 240], img="sun")

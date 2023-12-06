@@ -39,7 +39,7 @@ class Spaceship(SpaceObject):
         self.movement = [False, False, False, False]
         self.speed = 5
 
-    def move(self, event: pygame.Event):
+    def move(self, event: pygame.event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 self.movement[0] = True

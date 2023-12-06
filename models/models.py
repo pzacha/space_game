@@ -1,10 +1,7 @@
-import itertools
-
 import numpy as np
 
 
 class MassObject:
-    cls_id = itertools.count()
     id: int
     mass: int
     position: np.array
@@ -12,11 +9,12 @@ class MassObject:
 
     def __init__(
         self,
+        id: int,
         mass: int,
         position: np.array,
         velocity: np.array = np.array([0, 0]),
     ):
-        self.id = next(MassObject.cls_id)
+        self.id = id
         self.mass = mass
         self.position = position
         self.velocity = velocity
@@ -26,19 +24,3 @@ class MassObject:
 
     def update_position(self, timestamp: int):
         self.position = self.position + self.velocity * timestamp
-
-
-class ObjectCollection:
-    objects: list[MassObject]
-    timestamp: int = 1  # Timestamp in seconds
-
-    def __init__(self):
-        self.objects = []
-
-    def create_object(
-        self,
-        mass: int,
-        position: np.array,
-        velocity: np.array = np.array([0, 0]),
-    ) -> int:
-        self.objects.append(MassObject(mass, position, velocity))
