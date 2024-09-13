@@ -1,10 +1,15 @@
+from typing import Optional
 import pygame
 import numpy as np
 
 
 class SpaceObject:
     def __init__(
-        self, id: int, pos: list = [160, 260], radius: int = 100, img: str = "planet1"
+        self,
+        id: Optional[int] = None,
+        pos: list[int] = [160, 260],
+        radius: float = 100,
+        img: str = "planet1",
     ):
         self.id = id
         self.img = pygame.image.load(f"data/images/{img}.png")
@@ -26,16 +31,18 @@ class Planet(SpaceObject):
 
 
 class Sun(Planet):
-    def __init__(self, pos: list = [160, 260], radius: int = 100, img: str = "sun"):
-        super().__init__(pos, radius, img)
+    def __init__(
+        self, pos: list[int] = [160, 260], radius: int = 100, img: str = "sun"
+    ):
+        super().__init__(pos=pos, radius=radius, img=img)
         self.img = pygame.transform.scale(self.img, [self.radius * 2, self.radius * 2])
 
 
 class Spaceship(SpaceObject):
     def __init__(
-        self, pos: list = [160, 260], radius: int = 100, img: str = "spaceship"
+        self, pos: list[int] = [160, 260], radius: float = 100, img: str = "spaceship"
     ):
-        super().__init__(pos, radius, img)
+        super().__init__(pos=pos, radius=radius, img=img)
         self.movement = [False, False, False, False]
         self.speed = 5
 

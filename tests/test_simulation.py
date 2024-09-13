@@ -11,7 +11,7 @@ def test_get_data(simulation_multiple):
 
 def test_calc_distance(simulation_multiple):
     _, x_pos, y_pos = simulation_multiple.get_vectorized_data()
-    dx, dy = simulation_multiple.calc_distance(x_pos, y_pos)
+    dx, dy, dr = simulation_multiple.calc_distance(x_pos, y_pos)
     np.testing.assert_array_equal(dx[0], np.array([0, -3, -2, -3, -4]))
     np.testing.assert_array_equal(dx[2], np.array([2, -1, 0, -1, -2]))
     np.testing.assert_array_equal(dy[0], np.array([0, -4, -2, -3, -4]))
@@ -22,16 +22,18 @@ def test_calc_distance(simulation_multiple):
 def test_calc_force(simulation):
     mass, x_pos, y_pos = simulation.get_vectorized_data()
     dx, dy = simulation.calc_distance(x_pos, y_pos)
-    force_x, force_y = simulation.calc_force(mass, dx, dy)
-    np.testing.assert_array_equal(force_x, np.array([2, -2]))
-    np.testing.assert_array_equal(force_y, np.array([0.5, -0.5]))
+    force_x = simulation.calc_force(mass, dx)
+    force_y = simulation.calc_force(mass, dy)
+    np.testing.assert_array_equal(force_x.round(1), np.array([2, -2]))
+    np.testing.assert_array_equal(force_y.round(1), np.array([0.5, -0.5]))
 
 
 @patch("models.simulation.Simulation.grav_const", 1)
 def test_calc_acceleration(simulation):
     mass, x_pos, y_pos = simulation.get_vectorized_data()
     dx, dy = simulation.calc_distance(x_pos, y_pos)
-    force_x, force_y = simulation.calc_force(mass, dx, dy)
+    force_x = simulation.calc_force(mass, dx)
+    force_y = simulation.calc_force(mass, dy)
     a_x, a_y = simulation.calc_acceleration(force_x, force_y, mass)
     np.testing.assert_array_equal(a_x, np.array([1, -0.5]))
     np.testing.assert_array_equal(a_y, np.array([0.25, -0.125]))

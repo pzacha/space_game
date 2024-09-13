@@ -21,12 +21,14 @@ class Simulation:
 
     def create_object(
         self,
-        mass: int,
-        position: np.array,
-        velocity: np.array = np.array([0, 0]),
+        mass: float,
+        position: list[float],
+        velocity: list[float] = [0, 0],
         game_object: Optional[Type[SpaceObject]] = None,
-    ) -> int:
+    ):
         id = next(self.id)
+        position = np.array(position, dtype=np.float64)
+        velocity = np.array(velocity, dtype=np.float64)
         self.objects.append(MassObject(id, mass, position, velocity))
         if game_object:
             game_object.id = id
@@ -49,25 +51,26 @@ class Simulation:
         dy = np.subtract.outer(y_pos, y_pos)
         return dx, dy
 
-    def _calc_force(self, mass: np.array, dr: np.array) -> np.array:
-        forces = (self.grav_const * np.outer(mass, mass) / dr**2) * (dr / (abs(dr)))
-        forces = np.nan_to_num(forces)
+    def calc_force(self, mass: np.array, dr: np.array) -> tuple[np.array, np.array]:
+        """np.divide is used to assign 0 to output when division by 0 happens"""
+        forces = (
+            self.grav_const
+            * np.divide(
+                np.outer(mass, mass),
+                dr**2,
+                out=np.zeros_like(np.outer(mass, mass)),
+                where=dr != 0,
+            )
+            * (np.divide(dr, abs(dr), out=np.zeros_like(dr), where=abs(dr) != 0))
+        )
         return forces.sum(axis=0)
-
-    def calc_force(
-        self, mass: np.array, dx: np.array, dy: np.array
-    ) -> tuple[np.array, np.array]:
-        return (self._calc_force(mass, dx), self._calc_force(mass, dy))
-
-    def _calc_acceleration(self, force: np.array, mass: np.array):
-        return force / mass
 
     def calc_acceleration(
         self, force_x: np.array, force_y: np.array, mass: np.array
     ) -> tuple[np.array, np.array]:
         return (
-            self._calc_acceleration(force_x, mass),
-            self._calc_acceleration(force_y, mass),
+            force_x / mass,
+            force_y / mass,
         )
 
     def update_data(self, a_x: np.array, a_y: np.array):
@@ -78,7 +81,8 @@ class Simulation:
     def run_simulation_step(self):
         mass, x_pos, y_pos = self.get_vectorized_data()
         dx, dy = self.calc_distance(x_pos, y_pos)
-        force_x, force_y = self.calc_force(mass, dx, dy)
+        force_x = self.calc_force(mass, dx)
+        force_y = self.calc_force(mass, dy)
         a_x, a_y = self.calc_acceleration(force_x, force_y, mass)
         self.update_data(a_x, a_y)
 
@@ -86,7 +90,7 @@ class Simulation:
         return round(position / self.max_dist * self.resolution, 1)
 
     def update_simulation(self):
-        self.run_simulation_step(self.objects)
+        self.run_simulation_step()
         for obj, g_obj in zip(self.objects, self.game_objects):
             g_obj.pos[0] = self.normalize(obj.position[0])
             g_obj.pos[0] = self.normalize(obj.position[1])

@@ -3,24 +3,24 @@ import numpy as np
 
 class MassObject:
     id: int
-    mass: int
+    mass: float
     position: np.array
     velocity: np.array
 
     def __init__(
         self,
         id: int,
-        mass: int,
+        mass: float,
         position: np.array,
-        velocity: np.array = np.array([0, 0]),
+        velocity: np.array = np.array([0, 0], dtype=np.float64),
     ):
         self.id = id
         self.mass = mass
         self.position = position
         self.velocity = velocity
 
-    def update_velocity(self, acceleration: np.array, timestamp: int):
+    def update_velocity(self, acceleration: np.array, timestamp: float):
         self.velocity = self.velocity + acceleration * timestamp
 
-    def update_position(self, timestamp: int):
+    def update_position(self, timestamp: float):
         self.position = self.position + self.velocity * timestamp
