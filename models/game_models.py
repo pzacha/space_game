@@ -7,23 +7,19 @@ class SpaceObject:
     def __init__(
         self,
         id: Optional[int] = None,
-        pos: list[int] = [160, 260],
+        pos: Optional[list[int]] = None,
         radius: float = 100,
         img: str = "planet1",
     ):
         self.id = id
         self.img = pygame.image.load(f"data/images/{img}.png")
-        self.pos = pos
+        self.pos = pos if pos else [0, 0]
         self.radius = radius
         self.img = pygame.transform.scale(self.img, [self.radius, self.radius])
 
     @property
     def render_pos(self):
         return np.subtract(self.pos, np.divide(list(self.img.get_size()), 2))
-
-    def update(self, x: int, y: int):
-        self.pos[1] = y
-        self.pos[0] = x
 
 
 class Planet(SpaceObject):
@@ -32,7 +28,7 @@ class Planet(SpaceObject):
 
 class Sun(Planet):
     def __init__(
-        self, pos: list[int] = [160, 260], radius: int = 100, img: str = "sun"
+        self, pos: Optional[list[int]] = None, radius: int = 100, img: str = "sun"
     ):
         super().__init__(pos=pos, radius=radius, img=img)
         self.img = pygame.transform.scale(self.img, [self.radius * 2, self.radius * 2])
@@ -40,7 +36,10 @@ class Sun(Planet):
 
 class Spaceship(SpaceObject):
     def __init__(
-        self, pos: list[int] = [160, 260], radius: float = 100, img: str = "spaceship"
+        self,
+        pos: Optional[list[int]] = None,
+        radius: float = 100,
+        img: str = "spaceship",
     ):
         super().__init__(pos=pos, radius=radius, img=img)
         self.movement = [False, False, False, False]
@@ -66,7 +65,5 @@ class Spaceship(SpaceObject):
             elif event.key == pygame.K_LEFT:
                 self.movement[3] = False
 
-    def update(self, x: int, y: int):
-        super().update(x, y)
         self.pos[1] += (self.movement[1] - self.movement[0]) * self.speed
         self.pos[0] += (self.movement[2] - self.movement[3]) * self.speed

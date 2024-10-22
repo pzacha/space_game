@@ -14,23 +14,24 @@ class Game:
         pygame.display.set_caption("Test game")
         self.window = pygame.display.set_mode((640, 640))
         self.clock = pygame.time.Clock()
-        self.planet1 = Spaceship(pos=[100, 100], img="planet2")
-        self.planet2 = Spaceship(pos=[150, 50], img="planet2")
-        self.sun = Sun([320, 240], img="sun")
+        self.planet1 = Spaceship(img="planet2")
+        self.planet2 = Spaceship(img="planet2")
+        self.sun = Sun(img="sun")
         self.sim = Simulation()
         self.sim.create_object(
-            mass=10000, position=[100, 100], game_object=self.planet1
+            mass=10000, position=[450, 350], game_object=self.planet1
         )
-        self.sim.create_object(mass=10000, position=[150, 50], game_object=self.planet2)
         self.sim.create_object(
-            mass=10000010000000000000000, position=[320, 240], game_object=self.sun
+            mass=10000, position=[550, 250], game_object=self.planet2
+        )
+        self.sim.create_object(
+            mass=10000010000000000000000.0, position=[120, 540], game_object=self.sun
         )
 
     def run(self):
+        self.sim.update_simulation()
         while True:
             self.window.fill((0, 0, 0))
-            self.planet1.update(*self.planet1.pos)
-            self.planet2.update(*self.planet2.pos)
             self.window.blit(self.planet1.img, self.planet1.render_pos)
             self.window.blit(self.planet2.img, self.planet2.render_pos)
             self.window.blit(self.sun.img, self.sun.render_pos)

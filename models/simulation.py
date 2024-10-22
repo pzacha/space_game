@@ -9,7 +9,7 @@ from models.models import MassObject
 class Simulation:
     objects: list[MassObject]
     game_objects: list[Type[SpaceObject]]
-    timestamp: int = 1  # Timestamp in seconds
+    timestamp: int = 100000000  # Timestamp in seconds
     id = itertools.count()
     max_dist = 3.3 * 10**11
     grav_const = 6.674 * 10 ** (-11)
@@ -27,7 +27,9 @@ class Simulation:
         game_object: Optional[Type[SpaceObject]] = None,
     ):
         id = next(self.id)
-        position = np.array(position, dtype=np.float64)
+        position = (
+            np.array(position, dtype=np.float64) / self.resolution * self.max_dist
+        )
         velocity = np.array(velocity, dtype=np.float64)
         self.objects.append(MassObject(id, mass, position, velocity))
         if game_object:
@@ -79,6 +81,7 @@ class Simulation:
             obj.update_position(self.timestamp)
 
     def run_simulation_step(self):
+        """Update mass objects."""
         mass, x_pos, y_pos = self.get_vectorized_data()
         dx, dy = self.calc_distance(x_pos, y_pos)
         force_x = self.calc_force(mass, dx)
@@ -87,10 +90,11 @@ class Simulation:
         self.update_data(a_x, a_y)
 
     def normalize(self, position: float):
-        return round(position / self.max_dist * self.resolution, 1)
+        return int(round(position / self.max_dist * self.resolution))
 
     def update_simulation(self):
         self.run_simulation_step()
         for obj, g_obj in zip(self.objects, self.game_objects):
+            # Update game objects
             g_obj.pos[0] = self.normalize(obj.position[0])
-            g_obj.pos[0] = self.normalize(obj.position[1])
+            g_obj.pos[1] = self.normalize(obj.position[1])
