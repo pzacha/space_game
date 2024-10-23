@@ -45,7 +45,7 @@ class Spaceship(SpaceObject):
         self.movement = [False, False, False, False]
         self.speed = 5
 
-    def move(self, event: pygame.event):
+    def move(self, event: pygame.event) -> np.array:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 self.movement[0] = True
@@ -65,5 +65,6 @@ class Spaceship(SpaceObject):
             elif event.key == pygame.K_LEFT:
                 self.movement[3] = False
 
-        self.pos[1] += (self.movement[1] - self.movement[0]) * self.speed
-        self.pos[0] += (self.movement[2] - self.movement[3]) * self.speed
+        vel_x = (self.movement[1] - self.movement[0]) * self.speed
+        vel_y = (self.movement[2] - self.movement[3]) * self.speed
+        return np.array([vel_x, vel_y], dtype=np.float64)

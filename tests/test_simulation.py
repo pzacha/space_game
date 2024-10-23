@@ -16,37 +16,37 @@ def test_calc_distance(simulation_multiple):
     np.testing.assert_array_equal(dx[2], np.array([2, -1, 0, -1, -2]))
     np.testing.assert_array_equal(dy[0], np.array([0, -4, -2, -3, -4]))
     np.testing.assert_array_equal(dy[2], np.array([2, -2, 0, -1, -2]))
+    assert dr[0][1] == 5
 
 
-@patch("models.simulation.Simulation.grav_const", 1)
 def test_calc_force(simulation):
     mass, x_pos, y_pos = simulation.get_vectorized_data()
-    dx, dy = simulation.calc_distance(x_pos, y_pos)
-    force_x = simulation.calc_force(mass, dx)
-    force_y = simulation.calc_force(mass, dy)
-    np.testing.assert_array_equal(force_x.round(1), np.array([2, -2]))
-    np.testing.assert_array_equal(force_y.round(1), np.array([0.5, -0.5]))
+    dx, dy, dr = simulation.calc_distance(x_pos, y_pos)
+    force_x, force_y = simulation.calc_force(mass, dx, dy, dr)
+    np.testing.assert_array_equal(force_x.round(2), np.array([0.18, -0.18]))
+    np.testing.assert_array_equal(force_y.round(2), np.array([0.36, -0.36]))
 
 
-@patch("models.simulation.Simulation.grav_const", 1)
 def test_calc_acceleration(simulation):
     mass, x_pos, y_pos = simulation.get_vectorized_data()
-    dx, dy = simulation.calc_distance(x_pos, y_pos)
-    force_x = simulation.calc_force(mass, dx)
-    force_y = simulation.calc_force(mass, dy)
+    dx, dy, dr = simulation.calc_distance(x_pos, y_pos)
+    force_x, force_y = simulation.calc_force(mass, dx, dy, dr)
     a_x, a_y = simulation.calc_acceleration(force_x, force_y, mass)
-    np.testing.assert_array_equal(a_x, np.array([1, -0.5]))
-    np.testing.assert_array_equal(a_y, np.array([0.25, -0.125]))
+    np.testing.assert_array_equal(a_x.round(2), np.array([0.09, -0.04]))
+    np.testing.assert_array_equal(a_y.round(2), np.array([0.18, -0.09]))
 
 
-@patch("models.simulation.Simulation.grav_const", 1)
 def test_update_data(simulation):
     simulation.run_simulation_step()
-    np.testing.assert_array_equal(simulation.objects[0].velocity, np.array([1, 0.25]))
     np.testing.assert_array_equal(
-        simulation.objects[1].velocity, np.array([-0.5, -0.125])
+        simulation.objects[0].velocity.round(2), np.array([0.09, 0.18])
     )
-    np.testing.assert_array_equal(simulation.objects[0].position, np.array([1, 0.25]))
     np.testing.assert_array_equal(
-        simulation.objects[1].position, np.array([1.5, 3.875])
+        simulation.objects[1].velocity.round(2), np.array([-0.04, -0.09])
+    )
+    np.testing.assert_array_equal(
+        simulation.objects[0].position.round(2), np.array([0.09, 0.18])
+    )
+    np.testing.assert_array_equal(
+        simulation.objects[1].position.round(2), np.array([1.96, 3.91])
     )
