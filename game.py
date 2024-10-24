@@ -14,19 +14,21 @@ class Game:
         pygame.display.set_caption("Test game")
         self.window = pygame.display.set_mode((640, 640))
         self.clock = pygame.time.Clock()
-        self.player = Spaceship(img="planet2")
+        self.player = Spaceship(img="planet6")
         self.planet = Planet(img="planet2")
         self.sun = Sun(img="sun")
         self.sim = Simulation()
         self.sim.create_object(mass=10000, position=[450, 350], game_object=self.player)
         self.sim.create_object(
-            mass=10000,
-            position=[550, 250],
-            velocity=[0, -400],
+            mass=4.87 * (10**24),
+            position=[320 - 1 / 3.3 * 320, 320],
+            velocity=[0, -47400],
             game_object=self.planet,
         )
         self.sim.create_object(
-            mass=10000010000000000000000.0, position=[320, 320], game_object=self.sun
+            mass=1.989 * (10**30),
+            position=[self.sim.resolution / 2, self.sim.resolution / 2],
+            game_object=self.sun,
         )
 
     def run(self):
@@ -42,9 +44,9 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
+                if event.type == pygame.KEYDOWN:
                     self.sim.objects[self.player.id].update_velocity(
-                        self.player.move(event), 100
+                        self.player.move(event), self.sim.timestamp
                     )
 
             pygame.display.update()

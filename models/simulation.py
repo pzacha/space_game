@@ -9,7 +9,7 @@ from models.models import MassObject
 class Simulation:
     objects: list[MassObject]
     game_objects: list[Type[SpaceObject]]
-    timestamp: int = 100000  # Timestamp in seconds
+    timestamp: int = 1000  # Timestamp in seconds
     id = itertools.count()
     max_dist = 3.3 * 10**11
     grav_const = 6.674 * 10 ** (-11)
