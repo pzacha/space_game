@@ -9,7 +9,7 @@ def circle(progress, x, y, r):
     )
 
 
-def draw_sun(progress, x, y, r):
+def sun_1(progress, x, y, r):
     return (
         x + (r - r / pi) * cos(2 * pi * progress) + r / pi * cos(((r - r / pi) / r / pi) * 2 * pi * progress),
         y + (r - r / pi) * sin(2 * pi * progress) - r / pi * sin(((r - r / pi) / r / pi) * 2 * pi * progress),
@@ -18,7 +18,7 @@ def draw_sun(progress, x, y, r):
 
 def morph_figure(progress, a, b):
     progress = progress * 50
-    return draw_sun(progress, a, b)
+    return sun_1(progress, a, b)
 
 
 def morph(fig1, fig2, progress, alpha, a=None, b=None):
@@ -33,23 +33,21 @@ def morph(fig1, fig2, progress, alpha, a=None, b=None):
     )
 
 
-def draw_sun(window, color, pos, r):
-    x = int(pos[0])
-    y = int(pos[1])
-    POINTS = 20000
+def draw_sun(window, color, pos, r, timestamp):
+    POINTS = 2000
     pygame.draw.circle(
         window,
         color,
         pos,
-        radius=r,
-        width=4,
+        radius=r + 1,
+        width=1,
     )
     for it in range(POINTS):
-        progress = 50 * it / POINTS
+        progress = timestamp / 100 + 13 * it / POINTS
         pygame.draw.circle(
             window,
             color,
-            draw_sun(progress, x, y, r),
+            sun_1(progress, pos[0], pos[1], r),
             radius=1,
         )
 

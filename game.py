@@ -3,6 +3,7 @@ import pygame as pg
 
 from models.game_models import Planet, Spaceship, Sun
 from models.simulation import Simulation
+from utils.animations import draw_sun
 
 
 MOVEMENT_EVENTS_KEYS = {pg.K_DOWN, pg.K_UP, pg.K_RIGHT, pg.K_LEFT}
@@ -33,11 +34,12 @@ class Game:
 
     def run(self):
         self.sim.update_simulation()
+        timestamp = 0
         while True:
             self.window.fill((0, 0, 0))
             pg.draw.circle(self.window, pg.Color("green"), self.player.pos, radius=self.player.radius, width=2)
             pg.draw.circle(self.window, pg.Color("white"), self.planet.pos, radius=self.planet.radius, width=2)
-            pg.draw.circle(self.window, pg.Color("yellow"), self.sun.pos, radius=self.sun.radius, width=2)
+            draw_sun(self.window, pg.Color("yellow"), self.sun.pos, self.sun.radius, timestamp)
             self.sim.update_simulation()
 
             for event in pg.event.get():
@@ -49,6 +51,7 @@ class Game:
 
             pg.display.update()
             self.clock.tick(60)
+            timestamp += 1
 
 
 Game().run()
