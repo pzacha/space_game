@@ -9,7 +9,7 @@ from models.models import MassObject
 class Simulation:
     objects: list[MassObject]
     game_objects: list[Type[SpaceObject]]
-    timestamp: int = 1000  # Timestamp in seconds
+    timestamp: int = 2000  # Timestamp in seconds
     id = itertools.count()
     max_dist = 3.3 * 10**11
     grav_const = 6.674 * 10 ** (-11)
@@ -27,9 +27,7 @@ class Simulation:
         game_object: Optional[Type[SpaceObject]] = None,
     ):
         id = next(self.id)
-        position = (
-            np.array(position, dtype=np.float64) / self.resolution * self.max_dist
-        )
+        position = np.array(position, dtype=np.float64) / self.resolution * self.max_dist
         velocity = np.array(velocity, dtype=np.float64)
         self.objects.append(MassObject(id, mass, position, velocity))
         if game_object:
@@ -46,17 +44,13 @@ class Simulation:
             y_pos.append(obj.position[1])
         return np.array(mass), np.array(x_pos), np.array(y_pos)
 
-    def calc_distance(
-        self, x_pos: np.array, y_pos: np.array
-    ) -> tuple[np.array, np.array, np.array]:
+    def calc_distance(self, x_pos: np.array, y_pos: np.array) -> tuple[np.array, np.array, np.array]:
         dx = np.subtract.outer(x_pos, x_pos)
         dy = np.subtract.outer(y_pos, y_pos)
         dr = np.sqrt(dx**2 + dy**2)
         return dx, dy, dr
 
-    def calc_force(
-        self, mass: np.array, dx: np.array, dy: np.array, dr: np.array
-    ) -> tuple[np.array, np.array]:
+    def calc_force(self, mass: np.array, dx: np.array, dy: np.array, dr: np.array) -> tuple[np.array, np.array]:
         """np.divide is used to assign 0 to output when division by 0 happens"""
         forces = (
             self.grav_const
@@ -68,17 +62,11 @@ class Simulation:
             )
             * (np.divide(dr, abs(dr), out=np.zeros_like(dr), where=abs(dr) != 0))
         )
-        forces_x = np.divide(
-            forces * dx, dr, out=np.zeros_like(np.outer(mass, mass)), where=dr != 0
-        )
-        forces_y = np.divide(
-            forces * dy, dr, out=np.zeros_like(np.outer(mass, mass)), where=dr != 0
-        )
+        forces_x = np.divide(forces * dx, dr, out=np.zeros_like(np.outer(mass, mass)), where=dr != 0)
+        forces_y = np.divide(forces * dy, dr, out=np.zeros_like(np.outer(mass, mass)), where=dr != 0)
         return forces_x.sum(axis=0), forces_y.sum(axis=0)
 
-    def calc_acceleration(
-        self, force_x: np.array, force_y: np.array, mass: np.array
-    ) -> tuple[np.array, np.array]:
+    def calc_acceleration(self, force_x: np.array, force_y: np.array, mass: np.array) -> tuple[np.array, np.array]:
         return (
             force_x / mass,
             force_y / mass,

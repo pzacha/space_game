@@ -1,22 +1,22 @@
 import sys
-import pygame
+import pygame as pg
 
 from models.game_models import Planet, Spaceship, Sun
 from models.simulation import Simulation
 
 
-MOVEMENT_EVENTS_KEYS = {pygame.K_DOWN, pygame.K_UP, pygame.K_RIGHT, pygame.K_LEFT}
+MOVEMENT_EVENTS_KEYS = {pg.K_DOWN, pg.K_UP, pg.K_RIGHT, pg.K_LEFT}
 
 
 class Game:
     def __init__(self) -> None:
-        pygame.init()
-        pygame.display.set_caption("Test game")
-        self.window = pygame.display.set_mode((640, 640))
-        self.clock = pygame.time.Clock()
-        self.player = Spaceship(img="planet6")
-        self.planet = Planet(img="planet2")
-        self.sun = Sun(img="sun")
+        pg.init()
+        pg.display.set_caption("Test game")
+        self.window = pg.display.set_mode((640, 640))
+        self.clock = pg.time.Clock()
+        self.player = Spaceship()
+        self.planet = Planet()
+        self.sun = Sun()
         self.sim = Simulation()
         self.sim.create_object(mass=10000, position=[450, 350], game_object=self.player)
         self.sim.create_object(
@@ -35,21 +35,19 @@ class Game:
         self.sim.update_simulation()
         while True:
             self.window.fill((0, 0, 0))
-            self.window.blit(self.player.img, self.player.render_pos)
-            self.window.blit(self.planet.img, self.planet.render_pos)
-            self.window.blit(self.sun.img, self.sun.render_pos)
+            pg.draw.circle(self.window, pg.Color("green"), self.player.pos, radius=self.player.radius, width=2)
+            pg.draw.circle(self.window, pg.Color("white"), self.planet.pos, radius=self.planet.radius, width=2)
+            pg.draw.circle(self.window, pg.Color("yellow"), self.sun.pos, radius=self.sun.radius, width=2)
             self.sim.update_simulation()
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    pg.quit()
                     sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    self.sim.objects[self.player.id].update_velocity(
-                        self.player.move(event), self.sim.timestamp
-                    )
+                if event.type == pg.KEYDOWN:
+                    self.sim.objects[self.player.id].update_velocity(self.player.move(event), self.sim.timestamp)
 
-            pygame.display.update()
+            pg.display.update()
             self.clock.tick(60)
 
 

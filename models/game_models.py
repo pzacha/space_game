@@ -8,18 +8,11 @@ class SpaceObject:
         self,
         id: Optional[int] = None,
         pos: Optional[list[int]] = None,
-        radius: float = 100,
-        img: str = "planet1",
+        radius: float = 24,
     ):
         self.id = id
-        self.img = pygame.image.load(f"data/images/{img}.png")
         self.pos = pos if pos else [0, 0]
         self.radius = radius
-        self.img = pygame.transform.scale(self.img, [self.radius, self.radius])
-
-    @property
-    def render_pos(self):
-        return np.subtract(self.pos, np.divide(list(self.img.get_size()), 2))
 
 
 class Planet(SpaceObject):
@@ -27,22 +20,18 @@ class Planet(SpaceObject):
 
 
 class Sun(Planet):
-    def __init__(
-        self, pos: Optional[list[int]] = None, radius: int = 100, img: str = "sun"
-    ):
-        super().__init__(pos=pos, radius=radius, img=img)
-        self.img = pygame.transform.scale(self.img, [self.radius * 2, self.radius * 2])
+    def __init__(self, pos: Optional[list[int]] = None, radius: int = 40):
+        super().__init__(pos=pos, radius=radius)
 
 
 class Spaceship(SpaceObject):
     def __init__(
         self,
         pos: Optional[list[int]] = None,
-        radius: float = 100,
-        img: str = "spaceship",
+        radius: float = 16,
         power: float = 3,
     ):
-        super().__init__(pos=pos, radius=radius, img=img)
+        super().__init__(pos=pos, radius=radius)
         self.movement = [0, 0, 0, 0]
         self.power = power
 
