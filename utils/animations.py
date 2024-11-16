@@ -10,9 +10,10 @@ def circle(progress, x, y, r):
 
 
 def sun_1(progress, x, y, r):
+    ratio = pi
     return (
-        x + (r - r / pi) * cos(2 * pi * progress) + r / pi * cos(((r - r / pi) / r / pi) * 2 * pi * progress),
-        y + (r - r / pi) * sin(2 * pi * progress) - r / pi * sin(((r - r / pi) / r / pi) * 2 * pi * progress),
+        x + (r - r / ratio) * cos(2 * pi * progress) + r / ratio * cos(((r - r / ratio) / r / ratio) * 2 * pi * progress),
+        y + (r - r / ratio) * sin(2 * pi * progress) - r / ratio * sin(((r - r / ratio) / r / ratio) * 2 * pi * progress),
     )
 
 
