@@ -10,6 +10,8 @@ MOVEMENT_EVENTS_KEYS = {pg.K_DOWN, pg.K_UP, pg.K_RIGHT, pg.K_LEFT}
 
 
 class Game:
+    i = 0
+
     def __init__(self) -> None:
         pg.init()
         pg.display.set_caption("Test game")
@@ -46,8 +48,9 @@ class Game:
                 if event.type == pg.QUIT:
                     pg.quit()
                     sys.exit()
-                if event.type == pg.KEYDOWN:
-                    self.sim.objects[self.player.id].update_velocity(self.player.move(event), self.sim.timestamp)
+                if event.type in [pg.KEYDOWN, pg.KEYUP] and event.key in [pg.K_UP, pg.K_DOWN, pg.K_RIGHT, pg.K_LEFT]:
+                    self.player.update_acc(event)
+            self.sim.objects[self.player.id].update_velocity(self.player.acc, self.sim.timestamp)
 
             pg.display.update()
             self.clock.tick(60)

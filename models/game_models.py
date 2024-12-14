@@ -1,5 +1,5 @@
 from typing import Optional
-import pygame
+import pygame as pg
 import numpy as np
 
 
@@ -29,24 +29,37 @@ class Spaceship(SpaceObject):
         self,
         pos: Optional[list[int]] = None,
         radius: float = 16,
-        power: float = 3,
+        power: float = 1,
     ):
         super().__init__(pos=pos, radius=radius)
         self.movement = [0, 0, 0, 0]
         self.power = power
+        self.ax = 0
+        self.ay = 0
 
-    def move(self, event: pygame.event) -> np.array:
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
+    @property
+    def acc(self):
+        return np.array([self.ax, self.ay], dtype=np.float64)
+
+    def update_acc(self, event: pg.event) -> np.array:
+        if event.type == pg.KEYDOWN:
+            if event.key == pg.K_UP:
                 self.movement[0] = 1
-            if event.key == pygame.K_DOWN:
+            if event.key == pg.K_DOWN:
                 self.movement[1] = 1
-            if event.key == pygame.K_RIGHT:
+            if event.key == pg.K_RIGHT:
                 self.movement[2] = 1
-            if event.key == pygame.K_LEFT:
+            if event.key == pg.K_LEFT:
                 self.movement[3] = 1
+        if event.type == pg.KEYUP:
+            if event.key == pg.K_UP:
+                self.movement[0] = 0
+            if event.key == pg.K_DOWN:
+                self.movement[1] = 0
+            if event.key == pg.K_RIGHT:
+                self.movement[2] = 0
+            if event.key == pg.K_LEFT:
+                self.movement[3] = 0
 
-        a_y = (self.movement[1] - self.movement[0]) * self.power
-        a_x = (self.movement[2] - self.movement[3]) * self.power
-        self.movement = [0, 0, 0, 0]
-        return np.array([a_x, a_y], dtype=np.float64)
+        self.ay = (self.movement[1] - self.movement[0]) * self.power
+        self.ax = (self.movement[2] - self.movement[3]) * self.power
