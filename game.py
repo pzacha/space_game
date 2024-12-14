@@ -12,36 +12,52 @@ MOVEMENT_EVENTS_KEYS = {pg.K_DOWN, pg.K_UP, pg.K_RIGHT, pg.K_LEFT}
 class Game:
     i = 0
 
-    def __init__(self) -> None:
+    def __init__(self):
+        self._init_game_options()
+        self._init_player_object()
+        self._init_game_objects(1, 1)
+
+    def _init_game_options(self):
         pg.init()
         pg.display.set_caption("Test game")
         self.window = pg.display.set_mode((640, 640))
         self.clock = pg.time.Clock()
-        self.player = Spaceship()
-        self.planet = Planet()
-        self.sun = Sun()
         self.sim = Simulation()
+        self.timestamp = 0
+
+    def _init_player_object(self):
+        self.player = Spaceship()
         self.sim.create_object(mass=10000, position=[450, 350], game_object=self.player)
-        self.sim.create_object(
-            mass=4.87 * (10**24),
-            position=[320 - 1 / 3.3 * 320, 320],
-            velocity=[0, -47400],
-            game_object=self.planet,
-        )
-        self.sim.create_object(
-            mass=1.989 * (10**30),
-            position=[self.sim.resolution / 2, self.sim.resolution / 2],
-            game_object=self.sun,
-        )
+
+    def _init_game_objects(self, sun_num: int, planet_num: int):
+        for _ in range(sun_num):
+            self.sim.create_object(
+                mass=1.989 * (10**30),
+                position=[self.sim.resolution / 2, self.sim.resolution / 2],
+                game_object=Sun(),
+            )
+        for _ in range(planet_num):
+            self.sim.create_object(
+                mass=4.87 * (10**24),
+                position=[320 - 1 / 3.3 * 320, 320],
+                velocity=[0, -47400],
+                game_object=Planet(),
+            )
+
+    def _draw_objects(self):
+        self.window.fill((0, 0, 0))
+        for obj in self.sim.game_objects:
+            if type(obj) is Sun:
+                draw_sun(self.window, pg.Color("yellow"), obj.pos, obj.radius, self.timestamp)
+            elif type(obj) is Planet:
+                pg.draw.circle(self.window, obj.color, obj.pos, radius=obj.radius)
+            else:
+                pg.draw.circle(self.window, obj.color, obj.pos, radius=obj.radius, width=2)
 
     def run(self):
         self.sim.update_simulation()
-        timestamp = 0
         while True:
-            self.window.fill((0, 0, 0))
-            pg.draw.circle(self.window, pg.Color("green"), self.player.pos, radius=self.player.radius, width=2)
-            pg.draw.circle(self.window, pg.Color("white"), self.planet.pos, radius=self.planet.radius, width=2)
-            draw_sun(self.window, pg.Color("yellow"), self.sun.pos, self.sun.radius, timestamp)
+            self._draw_objects()
             self.sim.update_simulation()
 
             for event in pg.event.get():
@@ -54,7 +70,7 @@ class Game:
 
             pg.display.update()
             self.clock.tick(60)
-            timestamp += 1
+            self.timestamp += 1
 
 
 Game().run()

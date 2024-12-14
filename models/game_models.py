@@ -9,10 +9,12 @@ class SpaceObject:
         id: Optional[int] = None,
         pos: Optional[list[int]] = None,
         radius: float = 24,
+        color: pg.Color = pg.Color("blue"),
     ):
         self.id = id
         self.pos = pos if pos else [0, 0]
         self.radius = radius
+        self.color = color
 
 
 class Planet(SpaceObject):
@@ -20,8 +22,8 @@ class Planet(SpaceObject):
 
 
 class Sun(Planet):
-    def __init__(self, pos: Optional[list[int]] = None, radius: int = 40):
-        super().__init__(pos=pos, radius=radius)
+    def __init__(self, pos: Optional[list[int]] = None, radius: int = 40, color=pg.Color("yellow")):
+        super().__init__(pos=pos, radius=radius, color=color)
 
 
 class Spaceship(SpaceObject):
@@ -30,8 +32,9 @@ class Spaceship(SpaceObject):
         pos: Optional[list[int]] = None,
         radius: float = 16,
         power: float = 1,
+        color: pg.Color = pg.Color("white"),
     ):
-        super().__init__(pos=pos, radius=radius)
+        super().__init__(pos=pos, radius=radius, color=color)
         self.movement = [0, 0, 0, 0]
         self.power = power
         self.ax = 0
