@@ -1,3 +1,4 @@
+import random
 import sys
 import pygame as pg
 
@@ -15,7 +16,7 @@ class Game:
     def __init__(self):
         self._init_game_options()
         self._init_player_object()
-        self._init_game_objects(1, 1)
+        self._init_game_objects(sun_num=1, planet_num=4)
 
     def _init_game_options(self):
         pg.init()
@@ -30,19 +31,30 @@ class Game:
         self.sim.create_object(mass=10000, position=[450, 350], game_object=self.player)
 
     def _init_game_objects(self, sun_num: int, planet_num: int):
-        for _ in range(sun_num):
+        def _random_position():
+            return [random.uniform(0, self.window.get_width()), random.uniform(0, self.window.get_height())]
+
+        def _create_sun():
+            mass = 1.989 * (10**30) * random.uniform(0.1, 10)
             self.sim.create_object(
-                mass=1.989 * (10**30),
-                position=[self.sim.resolution / 2, self.sim.resolution / 2],
+                mass=mass,
+                position=_random_position(),
                 game_object=Sun(),
             )
-        for _ in range(planet_num):
+
+        def _create_planet():
+            mass = 4.87 * (10**24) * random.uniform(0.1, 10)
             self.sim.create_object(
-                mass=4.87 * (10**24),
-                position=[320 - 1 / 3.3 * 320, 320],
+                mass=mass,
+                position=_random_position(),
                 velocity=[0, -47400],
                 game_object=Planet(),
             )
+
+        for _ in range(sun_num):
+            _create_sun()
+        for _ in range(planet_num):
+            _create_planet()
 
     def _draw_objects(self):
         self.window.fill((0, 0, 0))
