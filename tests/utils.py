@@ -2,7 +2,7 @@ from typing import Optional, Type
 import numpy as np
 from models.game_models import SpaceObject
 from models.models import MassObject
-from models.simulation import Simulation
+from utils.simulation import Simulation
 
 
 class FakeSimulation(Simulation):

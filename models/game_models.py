@@ -8,7 +8,7 @@ class SpaceObject:
         self,
         id: Optional[int] = None,
         pos: Optional[list[int]] = None,
-        radius: float = 24,
+        radius: float = 16,
         color: pg.Color = pg.Color("blue"),
     ):
         self.id = id

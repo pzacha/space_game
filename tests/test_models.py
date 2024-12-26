@@ -1,7 +1,7 @@
 import numpy as np
 
 from models.models import MassObject
-from models.simulation import Simulation
+from utils.simulation import Simulation
 
 
 class TestMassObject:

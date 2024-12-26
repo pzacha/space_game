@@ -2,9 +2,9 @@ import random
 import sys
 import pygame as pg
 
-from models.game_models import Planet, Spaceship, Sun
-from models.simulation import Simulation
+from models.game_models import Planet, Sun
 from utils.animations import draw_sun
+from utils.game_setup import init_game_objects, init_game_options, init_player_object
 
 
 MOVEMENT_EVENTS_KEYS = {pg.K_DOWN, pg.K_UP, pg.K_RIGHT, pg.K_LEFT}
@@ -14,47 +14,9 @@ class Game:
     i = 0
 
     def __init__(self):
-        self._init_game_options()
-        self._init_player_object()
-        self._init_game_objects(sun_num=1, planet_num=4)
-
-    def _init_game_options(self):
-        pg.init()
-        pg.display.set_caption("Test game")
-        self.window = pg.display.set_mode((640, 640))
-        self.clock = pg.time.Clock()
-        self.sim = Simulation()
-        self.timestamp = 0
-
-    def _init_player_object(self):
-        self.player = Spaceship()
-        self.sim.create_object(mass=10000, position=[450, 350], game_object=self.player)
-
-    def _init_game_objects(self, sun_num: int, planet_num: int):
-        def _random_position():
-            return [random.uniform(0, self.window.get_width()), random.uniform(0, self.window.get_height())]
-
-        def _create_sun():
-            mass = 1.989 * (10**30) * random.uniform(0.1, 10)
-            self.sim.create_object(
-                mass=mass,
-                position=_random_position(),
-                game_object=Sun(),
-            )
-
-        def _create_planet():
-            mass = 4.87 * (10**24) * random.uniform(0.1, 10)
-            self.sim.create_object(
-                mass=mass,
-                position=_random_position(),
-                velocity=[0, -47400],
-                game_object=Planet(),
-            )
-
-        for _ in range(sun_num):
-            _create_sun()
-        for _ in range(planet_num):
-            _create_planet()
+        init_game_options(self)
+        init_player_object(self)
+        init_game_objects(self, sun_num=1, planet_num=4)
 
     def _draw_objects(self):
         self.window.fill((0, 0, 0))
