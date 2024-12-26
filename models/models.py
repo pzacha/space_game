@@ -2,6 +2,10 @@ import numpy as np
 
 
 class MassObject:
+    """
+    Represents a physical object with mass, position, and velocity in space.
+    """
+
     id: int
     mass: float
     position: np.array

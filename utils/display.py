@@ -5,6 +5,9 @@ from utils.animations import draw_sun
 
 
 def draw_objects(game):
+    """
+    Draws all game objects onto the game window.
+    """
     game.window.fill((0, 0, 0))
     for obj in game.sim.game_objects:
         if type(obj) is Sun:

@@ -4,6 +4,10 @@ import numpy as np
 
 
 class SpaceObject:
+    """
+    A class to represent a space object in the game.
+    """
+
     def __init__(
         self,
         id: Optional[int] = None,
@@ -18,15 +22,27 @@ class SpaceObject:
 
 
 class Planet(SpaceObject):
+    """
+    A class to represent a planet in the game.
+    """
+
     pass
 
 
 class Sun(Planet):
+    """
+    A class to represent a sun in the game.
+    """
+
     def __init__(self, pos: Optional[list[int]] = None, radius: int = 40, color=pg.Color("yellow")):
         super().__init__(pos=pos, radius=radius, color=color)
 
 
 class Spaceship(SpaceObject):
+    """
+    A class to represent a player's spaceship in the game.
+    """
+
     def __init__(
         self,
         pos: Optional[list[int]] = None,

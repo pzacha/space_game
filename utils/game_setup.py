@@ -6,6 +6,9 @@ from utils.simulation import Simulation
 
 
 def init_game_options(game):
+    """
+    Initializes game options.
+    """
     pg.init()
     pg.display.set_caption("Test game")
     game.window = pg.display.set_mode((640, 640))
@@ -15,11 +18,18 @@ def init_game_options(game):
 
 
 def init_player_object(game):
+    """
+    Initializes the player object in the game.
+    """
     game.player = Spaceship()
     game.sim.create_object(mass=10000, position=[450, 350], game_object=game.player)
 
 
 def init_game_objects(game, sun_num: int, planet_num: int):
+    """
+    Initialize game objects by creating a specified number of suns and planets.
+    """
+
     def _random_position():
         return [random.uniform(0, game.window.get_width()), random.uniform(0, game.window.get_height())]
 

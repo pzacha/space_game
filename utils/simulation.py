@@ -7,6 +7,10 @@ from models.models import MassObject
 
 
 class Simulation:
+    """
+    A class to represent the simulation of space objects and their interactions.
+    """
+
     objects: list[MassObject]
     game_objects: list[Type[SpaceObject]]
     timestamp: int = 2000  # Timestamp in seconds
@@ -16,6 +20,9 @@ class Simulation:
     resolution = 640
 
     def __init__(self):
+        """
+        Initialize the simulation with empty lists for objects and game objects.
+        """
         self.objects = []
         self.game_objects = []
 
@@ -26,6 +33,9 @@ class Simulation:
         velocity: list[float] = [0, 0],
         game_object: Optional[Type[SpaceObject]] = None,
     ):
+        """
+        Create a new object in the simulation.
+        """
         id = next(self.id)
         position = np.array(position, dtype=np.float64) / self.resolution * self.max_dist
         velocity = np.array(velocity, dtype=np.float64)
@@ -35,6 +45,9 @@ class Simulation:
             self.game_objects.append(game_object)
 
     def get_vectorized_data(self) -> tuple[np.array, np.array, np.array]:
+        """
+        Get vectorized data of the objects in the simulation.
+        """
         mass = []
         x_pos = []
         y_pos = []
@@ -45,13 +58,19 @@ class Simulation:
         return np.array(mass), np.array(x_pos), np.array(y_pos)
 
     def calc_distance(self, x_pos: np.array, y_pos: np.array) -> tuple[np.array, np.array, np.array]:
+        """
+        Calculate the distance between objects.
+        """
         dx = np.subtract.outer(x_pos, x_pos)
         dy = np.subtract.outer(y_pos, y_pos)
         dr = np.sqrt(dx**2 + dy**2)
         return dx, dy, dr
 
     def calc_force(self, mass: np.array, dx: np.array, dy: np.array, dr: np.array) -> tuple[np.array, np.array]:
-        """np.divide is used to assign 0 to output when division by 0 happens"""
+        """
+        Calculate the gravitational force between objects.
+        np.divide is used to assign 0 to output when division by 0 happens
+        """
         forces = (
             self.grav_const
             * np.divide(
@@ -67,18 +86,26 @@ class Simulation:
         return forces_x.sum(axis=0), forces_y.sum(axis=0)
 
     def calc_acceleration(self, force_x: np.array, force_y: np.array, mass: np.array) -> tuple[np.array, np.array]:
+        """
+        Calculate the acceleration of objects based on the forces.
+        """
         return (
             force_x / mass,
             force_y / mass,
         )
 
     def update_data(self, a_x: np.array, a_y: np.array):
+        """
+        Update the velocity and position of objects based on acceleration.
+        """
         for obj, val_x, val_y in zip(self.objects, a_x, a_y):
             obj.update_velocity(np.array([val_x, val_y]), self.timestamp)
             obj.update_position(self.timestamp)
 
     def run_simulation_step(self):
-        """Update mass objects."""
+        """
+        Update mass objects by running a single simulation step.
+        """
         mass, x_pos, y_pos = self.get_vectorized_data()
         dx, dy, dr = self.calc_distance(x_pos, y_pos)
         force_x, force_y = self.calc_force(mass, dx, dy, dr)
@@ -86,9 +113,15 @@ class Simulation:
         self.update_data(a_x, a_y)
 
     def normalize(self, position: float):
+        """
+        Normalize the position to fit within the resolution.
+        """
         return int(round(position / self.max_dist * self.resolution))
 
     def update_simulation(self):
+        """
+        Run a simulation step and update game objects positions.
+        """
         self.run_simulation_step()
         for obj, g_obj in zip(self.objects, self.game_objects):
             # Update game objects
