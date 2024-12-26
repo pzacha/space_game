@@ -13,7 +13,7 @@ def init_game_options(game):
     pg.display.set_caption("Test game")
     game.window = pg.display.set_mode((640, 640))
     game.clock = pg.time.Clock()
-    game.sim = Simulation()
+    game.sim = Simulation(1.5)
     game.timestamp = 0
 
 
@@ -21,8 +21,7 @@ def init_player_object(game):
     """
     Initializes the player object in the game.
     """
-    game.player = Spaceship()
-    game.sim.create_object(mass=10000, position=[450, 350], game_object=game.player)
+    game.player = game.sim.create_object(mass=10000, position=[450, 350], game_object=Spaceship)
 
 
 def init_game_objects(game, sun_num: int, planet_num: int):
@@ -38,7 +37,7 @@ def init_game_objects(game, sun_num: int, planet_num: int):
         game.sim.create_object(
             mass=mass,
             position=[game.sim.resolution / 2, game.sim.resolution / 2],
-            game_object=Sun(),
+            game_object=Sun,
         )
 
     def _create_planet():
@@ -47,7 +46,7 @@ def init_game_objects(game, sun_num: int, planet_num: int):
             mass=mass,
             position=_random_position(),
             velocity=[0, -47400],
-            game_object=Planet(),
+            game_object=Planet,
         )
 
     for _ in range(sun_num):

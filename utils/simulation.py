@@ -1,9 +1,7 @@
 import itertools
-from typing import Optional, Type
+from typing import Type
 import numpy as np
 from models.game_models import SpaceObject
-
-from models.models import MassObject
 
 
 class Simulation:
@@ -11,38 +9,41 @@ class Simulation:
     A class to represent the simulation of space objects and their interactions.
     """
 
-    objects: list[MassObject]
-    game_objects: list[Type[SpaceObject]]
+    objects: list[Type[SpaceObject]]
     timestamp: int = 2000  # Timestamp in seconds
     id = itertools.count()
     max_dist = 3.3 * 10**11
     grav_const = 6.674 * 10 ** (-11)
     resolution = 640
 
-    def __init__(self):
+    def __init__(self, grav_const_factor: float = 1):
         """
-        Initialize the simulation with empty lists for objects and game objects.
+        Initialize the simulation.
         """
+        self.grav_const *= grav_const_factor
         self.objects = []
-        self.game_objects = []
 
     def create_object(
         self,
         mass: float,
         position: list[float],
         velocity: list[float] = [0, 0],
-        game_object: Optional[Type[SpaceObject]] = None,
-    ):
+        game_object: Type[SpaceObject] = SpaceObject,
+    ) -> Type[SpaceObject]:
         """
-        Create a new object in the simulation.
+        Creates and returns a new object in the simulation.
         """
         id = next(self.id)
         position = np.array(position, dtype=np.float64) / self.resolution * self.max_dist
         velocity = np.array(velocity, dtype=np.float64)
-        self.objects.append(MassObject(id, mass, position, velocity))
-        if game_object:
-            game_object.id = id
-            self.game_objects.append(game_object)
+        self.objects.append(game_object(id, mass, position, velocity))
+        return game_object(id, mass, position, velocity)
+
+    def delete_object(self, obj_id: int):
+        """
+        Delete an object from the simulation.
+        """
+        self.objects = [obj for obj in self.objects if obj.id != obj_id]
 
     def get_vectorized_data(self) -> tuple[np.array, np.array, np.array]:
         """
@@ -120,10 +121,9 @@ class Simulation:
 
     def update_simulation(self):
         """
-        Run a simulation step and update game objects positions.
+        Run a simulation step and update objects screen positions.
         """
         self.run_simulation_step()
-        for obj, g_obj in zip(self.objects, self.game_objects):
-            # Update game objects
-            g_obj.pos[0] = self.normalize(obj.position[0])
-            g_obj.pos[1] = self.normalize(obj.position[1])
+        for obj in self.objects:
+            obj.game_pos[0] = self.normalize(obj.position[0])
+            obj.game_pos[1] = self.normalize(obj.position[1])

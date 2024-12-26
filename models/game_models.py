@@ -3,22 +3,56 @@ import pygame as pg
 import numpy as np
 
 
-class SpaceObject:
+class MassObject:
+    """
+    Represents a physical object with mass, position, and velocity in space.
+    """
+
+    id: int
+    mass: float
+    position: np.array
+    velocity: np.array
+
+    def __init__(
+        self,
+        id: int,
+        mass: float,
+        position: np.array,
+        velocity: np.array = np.array([0, 0], dtype=np.float64),
+    ):
+        self.id = id
+        self.mass = mass
+        self.position = position
+        self.velocity = velocity
+
+    def update_velocity(self, acceleration: np.array, timestamp: float):
+        self.velocity = self.velocity + acceleration * timestamp
+
+    def update_position(self, timestamp: float):
+        self.position = self.position + self.velocity * timestamp
+
+
+class SpaceObject(MassObject):
     """
     A class to represent a space object in the game.
     """
 
+    game_pos: list[int]
+
     def __init__(
         self,
-        id: Optional[int] = None,
-        pos: Optional[list[int]] = None,
+        id: int,
+        mass: float,
+        position: np.array,
+        velocity: np.array = np.array([0, 0], dtype=np.float64),
         radius: float = 16,
         color: pg.Color = pg.Color("blue"),
+        game_pos: Optional[list[int]] = None,
     ):
-        self.id = id
-        self.pos = pos if pos else [0, 0]
+        super().__init__(id=id, mass=mass, position=position, velocity=velocity)
         self.radius = radius
         self.color = color
+        self.game_pos = game_pos if game_pos else [0, 0]
 
 
 class Planet(SpaceObject):
@@ -34,8 +68,16 @@ class Sun(Planet):
     A class to represent a sun in the game.
     """
 
-    def __init__(self, pos: Optional[list[int]] = None, radius: int = 40, color=pg.Color("yellow")):
-        super().__init__(pos=pos, radius=radius, color=color)
+    def __init__(
+        self,
+        id: int,
+        mass: float,
+        position: Optional[list[int]] = None,
+        velocity=np.array([0, 0], dtype=np.float64),
+        radius: int = 40,
+        color=pg.Color("yellow"),
+    ):
+        super().__init__(id=id, mass=mass, position=position, velocity=velocity, radius=radius, color=color)
 
 
 class Spaceship(SpaceObject):
@@ -45,12 +87,15 @@ class Spaceship(SpaceObject):
 
     def __init__(
         self,
-        pos: Optional[list[int]] = None,
+        id: int,
+        mass: float,
+        position: Optional[list[int]] = None,
+        velocity=np.array([0, 0], dtype=np.float64),
         radius: float = 16,
-        power: float = 1,
         color: pg.Color = pg.Color("white"),
+        power: float = 1,
     ):
-        super().__init__(pos=pos, radius=radius, color=color)
+        super().__init__(id=id, mass=mass, position=position, velocity=velocity, radius=radius, color=color)
         self.movement = [0, 0, 0, 0]
         self.power = power
         self.ax = 0
