@@ -1,6 +1,8 @@
 import sys
 import pygame as pg
 
+from models.game_models import Spaceship
+from utils.game_mechanics import detect_collisions
 from utils.game_setup import init_game_objects, init_game_options, init_player_object
 from utils.display import draw_objects
 
@@ -20,10 +22,11 @@ class Game:
         """Main game loop"""
         self.sim.update_simulation()
 
-        while True:
+        while Spaceship in [type(obj) for obj in self.sim.objects]:
             # Draw all game objects on the screen
             draw_objects(self)
             self.sim.update_simulation()
+            detect_collisions(self.sim)
 
             # Handle events
             for event in pg.event.get():
