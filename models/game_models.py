@@ -1,3 +1,4 @@
+from math import pi
 from typing import Optional
 import pygame as pg
 import numpy as np
@@ -76,8 +77,10 @@ class Sun(Planet):
         velocity=np.array([0, 0], dtype=np.float64),
         radius: int = 40,
         color=pg.Color("yellow"),
+        animation_ratio: Optional[float] = pi,
     ):
         super().__init__(id=id, mass=mass, position=position, velocity=velocity, radius=radius, color=color)
+        self.animation_ratio = animation_ratio
 
 
 class Spaceship(SpaceObject):
