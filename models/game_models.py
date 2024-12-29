@@ -54,6 +54,7 @@ class SpaceObject(MassObject):
         self.radius = radius
         self.color = color
         self.game_pos = game_pos if game_pos else [0, 0]
+        self.collision_time: Optional[int] = None
 
 
 class Planet(SpaceObject):
@@ -61,18 +62,7 @@ class Planet(SpaceObject):
     A class to represent a planet in the game.
     """
 
-    def __init__(
-        self,
-        id: int,
-        mass: float,
-        position: Optional[list[int]] = None,
-        velocity=np.array([0, 0], dtype=np.float64),
-        radius: float = 16,
-        color: pg.Color = pg.Color("blue"),
-        morphing: bool = False,
-    ):
-        super().__init__(id=id, mass=mass, position=position, velocity=velocity, radius=radius, color=color)
-        self.morphing = morphing
+    pass
 
 
 class Sun(Planet):
@@ -108,14 +98,12 @@ class Spaceship(SpaceObject):
         radius: float = 16,
         color: pg.Color = pg.Color("white"),
         power: float = 1,
-        morphing: bool = False,
     ):
         super().__init__(id=id, mass=mass, position=position, velocity=velocity, radius=radius, color=color)
         self.movement = [0, 0, 0, 0]
         self.power = power
         self.ax = 0
         self.ay = 0
-        self.morphing = morphing
 
     @property
     def acc(self):

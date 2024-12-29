@@ -16,7 +16,7 @@ class Game:
     def __init__(self):
         init_game_options(self)
         init_player_object(self)
-        init_game_objects(self, sun_num=1, planet_num=4)
+        init_game_objects(self, sun_num=1, planet_num=10)
 
     def run(self):
         """Main game loop"""
@@ -26,7 +26,7 @@ class Game:
             # Draw all game objects on the screen
             draw_objects(self)
             self.sim.update_simulation()
-            detect_collisions(self.sim)
+            detect_collisions(self)
 
             # Handle events
             for event in pg.event.get():
@@ -42,7 +42,7 @@ class Game:
             self.sim.objects[self.player.id].update_velocity(self.player.acc, self.sim.timestamp)
 
             pg.display.update()
-            self.clock.tick(60)
+            self.clock.tick(self.fps)
             self.timestamp += 1
 
 

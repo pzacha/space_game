@@ -15,13 +15,14 @@ def init_game_options(game):
     game.clock = pg.time.Clock()
     game.sim = Simulation(1.5)
     game.timestamp = 0
+    game.fps = 60
 
 
 def init_player_object(game):
     """
     Initializes the player object in the game.
     """
-    game.player = game.sim.create_object(mass=10000, position=[450, 350], game_object=Spaceship)
+    game.player = game.sim.create_object(mass=10**26, position=[450, 350], game_object=Spaceship)
 
 
 def init_game_objects(game, sun_num: int, planet_num: int):
@@ -45,7 +46,7 @@ def init_game_objects(game, sun_num: int, planet_num: int):
         game.sim.create_object(
             mass=mass,
             position=_random_position(),
-            velocity=[0, -47400],
+            velocity=[random.uniform(-50000, 50000), random.uniform(-50000, 50000)],
             game_object=Planet,
         )
 

@@ -1,5 +1,5 @@
-from math import cos, sin, pi, sqrt
-import pygame
+from math import cos, sin, pi
+import pygame as pg
 
 
 def sun_animation(progress, x, y, r, ratio=pi):
@@ -51,7 +51,7 @@ def draw_sun(window, color, pos, r, timestamp, animation_ratio):
     else:
         x = 10
 
-    pygame.draw.circle(
+    pg.draw.circle(
         window,
         color,
         pos,
@@ -60,9 +60,60 @@ def draw_sun(window, color, pos, r, timestamp, animation_ratio):
     )
     for it in range(POINTS):
         progress = timestamp / 100 + x * it / POINTS
-        pygame.draw.circle(
+        pg.draw.circle(
             window,
             color,
             sun_animation(progress, pos[0], pos[1], r, animation_ratio),
             radius=1,
         )
+
+
+def draw_collision(game, obj):
+    def _circle(progress, x, y, r):
+        return (
+            x + r * cos(2 * pi * progress),
+            y + r * sin(2 * pi * progress),
+        )
+
+    def _figure(progress, x, y, r, ratio):
+        a = r
+        b = r / ratio
+        return (
+            x + (a - b) * cos(2 * pi * progress) + b * cos(((a - b) / b) * 2 * pi * progress),
+            y + (a - b) * sin(2 * pi * progress) - b * sin(((a - b) / b) * 2 * pi * progress),
+        )
+
+    def _morph_figure(progress, x, y, r, ratio=pi):
+        progress = progress * 50
+        return _figure(progress, x, y, r, ratio)
+
+    def _morph(progress, alpha, r, pos):
+        x1, y1 = _morph_figure(progress, x=pos[0], y=pos[1], r=r)
+        x2, y2 = _circle(progress, x=pos[0], y=pos[1], r=r)
+        return (
+            x1 + (x2 - x1) * alpha,
+            y1 + (y2 - y1) * alpha,
+        )
+
+    frame = game.timestamp - obj.collision_time
+    frames = game.fps * 3
+    alpha = frame / frames
+    if alpha < 0.5:
+        radius = obj.radius * 2
+    else:
+        radius = obj.radius * (1 / alpha)
+
+    # Draw 1000 points over the morphed figure.
+    for i in range(1000):
+        progress = i / 1000
+        pg.draw.circle(
+            game.window,
+            obj.color,
+            _morph(progress, alpha, radius, obj.game_pos),
+            radius=1,
+        )
+
+    pg.draw.circle(game.window, obj.color, obj.game_pos, radius=obj.radius * alpha)
+
+    if frame == frames:
+        obj.collision_time = None
