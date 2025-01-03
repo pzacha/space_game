@@ -1,7 +1,0 @@
-{
-    "python.testing.pytestPath": "${workspaceFolder}/.venv/Scripts/pytest.exe",
-    "python.testing.pytestArgs": [
-        "tests"
-    ],
-    "python.testing.pytestEnabled": true
-}
