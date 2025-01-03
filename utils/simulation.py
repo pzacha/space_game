@@ -14,7 +14,7 @@ class Simulation:
     id = itertools.count()
     max_dist = 3.3 * 10**11
     grav_const = 6.674 * 10 ** (-11)
-    resolution = 640
+    resolution = (1920, 1080)
 
     def __init__(self, grav_const_factor: float = 1):
         """
@@ -113,11 +113,13 @@ class Simulation:
         a_x, a_y = self.calc_acceleration(force_x, force_y, mass)
         self.update_data(a_x, a_y)
 
-    def normalize(self, position: float):
+    def normalize(self, position: list[float]):
         """
         Normalize the position to fit within the resolution.
         """
-        return int(round(position / self.max_dist * self.resolution))
+        return int(round(position[0] / self.max_dist * self.resolution[0])), int(
+            round(position[1] / self.max_dist * self.resolution[1])
+        )
 
     def update_simulation(self):
         """
@@ -125,5 +127,4 @@ class Simulation:
         """
         self.run_simulation_step()
         for obj in self.objects:
-            obj.game_pos[0] = self.normalize(obj.position[0])
-            obj.game_pos[1] = self.normalize(obj.position[1])
+            obj.game_pos[0], obj.game_pos[1] = self.normalize(obj.position)

@@ -11,9 +11,9 @@ def init_game_options(game):
     """
     pg.init()
     pg.display.set_caption("Test game")
-    game.window = pg.display.set_mode((640, 640))
+    game.sim = Simulation(1)
+    game.window = pg.display.set_mode(game.sim.resolution)
     game.clock = pg.time.Clock()
-    game.sim = Simulation(1.5)
     game.timestamp = 0
     game.fps = 60
 
@@ -22,7 +22,7 @@ def init_player_object(game):
     """
     Initializes the player object in the game.
     """
-    game.player = game.sim.create_object(mass=10**26, position=[450, 350], game_object=Spaceship)
+    game.player = game.sim.create_object(mass=10**20, position=[450, 350], game_object=Spaceship)
 
 
 def init_game_objects(game, sun_num: int, planet_num: int):
@@ -31,22 +31,41 @@ def init_game_objects(game, sun_num: int, planet_num: int):
     """
 
     def _random_position():
+        """
+        Returns a random position within the window.
+        """
         return [random.uniform(0, game.window.get_width()), random.uniform(0, game.window.get_height())]
 
+    def _random_velocity():
+        """
+        Returns a random velocity between -10**5 and 10**5.
+        """
+        return random.uniform(-10, 10) * 10 ** random.randint(1, 4)
+
     def _create_sun():
-        mass = 1.989 * (10**30) * random.uniform(0.1, 10)
+        """
+        Creates a sun in center of the screen.
+        """
+        mass = 1.989 * (10**30) * random.uniform(1, 10)
         game.sim.create_object(
             mass=mass,
-            position=[game.sim.resolution / 2, game.sim.resolution / 2],
+            position=[game.sim.resolution[0] / 2, game.sim.resolution[1] / 2],
             game_object=Sun,
         )
 
     def _create_planet():
-        mass = 4.87 * (10**24) * random.uniform(0.1, 10)
+        """
+        Creates a planet with random mass, position, and velocity, and adds it to the game simulation.
+
+        The mass of the planet is calculated as a random value between 10^10 and 10^20.
+        The position of the planet is generated using the _random_position() function.
+        The velocity of the planet is generated using the _random_velocity() function.
+        """
+        mass = (10**10) * random.uniform(1, 10) * 10 ** random.randint(1, 10)
         game.sim.create_object(
             mass=mass,
             position=_random_position(),
-            velocity=[random.uniform(-50000, 50000), random.uniform(-50000, 50000)],
+            velocity=[_random_velocity(), _random_velocity()],
             game_object=Planet,
         )
 
