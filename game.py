@@ -41,6 +41,9 @@ class Game:
             # Update the player's velocity
             self.sim.objects[self.player.id].update_velocity(self.player.acc, self.sim.timestamp)
 
+            # Write players stats
+            self.window.blit(self.font.render(f"Mass = {self.player.mass:.1e}", True, pg.Color("white")), (30, 30))
+
             pg.display.update()
             self.clock.tick(self.fps)
             self.timestamp += 1

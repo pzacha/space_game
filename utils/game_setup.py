@@ -17,6 +17,7 @@ def init_game_options(game):
     game.clock = pg.time.Clock()
     game.timestamp = 0
     game.fps = 60
+    game.font = pg.font.Font(None, 40)
 
 
 def init_player_object(game):
