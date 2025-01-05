@@ -1,5 +1,5 @@
 import itertools
-from typing import Type
+from typing import Optional, Type
 import numpy as np
 from models.game_models import SpaceObject
 
@@ -29,6 +29,7 @@ class Simulation:
         position: list[float],
         velocity: list[float] = [0, 0],
         game_object: Type[SpaceObject] = SpaceObject,
+        color: Optional[tuple[int]] = None,
     ) -> Type[SpaceObject]:
         """
         Creates and returns a new object in the simulation.
@@ -36,8 +37,9 @@ class Simulation:
         id = next(self.id)
         position = np.array(position, dtype=np.float64) / self.resolution * self.max_dist
         velocity = np.array(velocity, dtype=np.float64)
-        self.objects.append(game_object(id, mass, position, velocity))
-        return game_object(id, mass, position, velocity)
+        game_obj = game_object(id, mass, position, velocity, color)
+        self.objects.append(game_obj)
+        return game_obj
 
     def delete_object(self, obj_id: int):
         """

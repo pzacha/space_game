@@ -1,6 +1,17 @@
 from itertools import combinations
 import math
+from models.game_models import Planet
+from utils.display import random_green, random_red
 from utils.simulation import Simulation
+
+
+def update_planet_colors(game):
+    """Updates the color of planets of their mass relative to players changed."""
+    for planet in [obj for obj in game.sim.objects if type(obj) is Planet]:
+        if planet.mass <= game.player.mass:
+            planet.color = random_green() if planet.color[1] == 0 else planet.color
+        else:
+            planet.color = random_red() if planet.color[0] == 0 else planet.color
 
 
 def detect_collisions(game):
@@ -15,3 +26,4 @@ def detect_collisions(game):
                 other_obj.mass += obj.mass
                 other_obj.collision_time = game.timestamp
                 game.sim.delete_object(obj.id)
+            update_planet_colors(game)

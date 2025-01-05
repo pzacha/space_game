@@ -47,12 +47,12 @@ class SpaceObject(MassObject):
         mass: float,
         position: np.array,
         velocity: np.array = np.array([0, 0], dtype=np.float64),
-        color: pg.Color = pg.Color("blue"),
+        color: Optional[tuple[int]] = None,
         game_pos: Optional[list[int]] = None,
     ):
         super().__init__(id=id, mass=mass, position=position, velocity=velocity)
         self.radius = math.floor(math.log10(self.mass)) * 2
-        self.color = color
+        self.color = color if color else pg.Color("blue")
         self.game_pos = game_pos if game_pos else [0, 0]
         self.collision_time: Optional[int] = None
 
@@ -76,7 +76,7 @@ class Sun(Planet):
         mass: float,
         position: Optional[list[int]] = None,
         velocity=np.array([0, 0], dtype=np.float64),
-        color=pg.Color("yellow"),
+        color: Optional[tuple[int]] = None,
         animation_ratio: Optional[float] = pi,
     ):
         super().__init__(id=id, mass=mass, position=position, velocity=velocity, color=color)
@@ -94,7 +94,7 @@ class Spaceship(SpaceObject):
         mass: float,
         position: Optional[list[int]] = None,
         velocity=np.array([0, 0], dtype=np.float64),
-        color: pg.Color = pg.Color("white"),
+        color: Optional[tuple[int]] = None,
         power: float = 1,
     ):
         super().__init__(id=id, mass=mass, position=position, velocity=velocity, color=color)

@@ -16,7 +16,7 @@ class Game:
     def __init__(self):
         init_game_options(self)
         init_player_object(self)
-        init_game_objects(self, sun_num=1, planet_num=10)
+        init_game_objects(self, sun_num=1, planet_num=15)
 
     def run(self):
         """Main game loop"""

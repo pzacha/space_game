@@ -1,7 +1,24 @@
+import random
 import pygame as pg
 
 from models.game_models import Sun
 from utils.animations import draw_collision, draw_sun
+
+
+def random_green():
+    """
+    Return randomized green color.
+    """
+    green = random.randint(100, 255)
+    return (0, green, 0)
+
+
+def random_red():
+    """
+    Return randomized red color.
+    """
+    red = random.randint(100, 255)
+    return (red, 0, 0)
 
 
 def draw_objects(game):

@@ -2,6 +2,7 @@ import random
 import pygame as pg
 
 from models.game_models import Planet, Spaceship, Sun
+from utils.display import random_green, random_red
 from utils.simulation import Simulation
 
 
@@ -22,7 +23,9 @@ def init_player_object(game):
     """
     Initializes the player object in the game.
     """
-    game.player = game.sim.create_object(mass=10**20, position=[450, 350], game_object=Spaceship)
+    game.player = game.sim.create_object(
+        mass=10**20, position=[450, 350], game_object=Spaceship, color=pg.Color("white")
+    )
 
 
 def init_game_objects(game, sun_num: int, planet_num: int):
@@ -38,9 +41,10 @@ def init_game_objects(game, sun_num: int, planet_num: int):
 
     def _random_velocity():
         """
-        Returns a random velocity between -10**5 and 10**5.
+        Returns a random velocity.
         """
-        return random.uniform(-10, 10) * 10 ** random.randint(1, 4)
+
+        return random.choice([1, -1]) * random.uniform(1, 10) * 10 ** random.randint(2, 5)
 
     def _create_sun():
         """
@@ -51,6 +55,7 @@ def init_game_objects(game, sun_num: int, planet_num: int):
             mass=mass,
             position=[game.sim.resolution[0] / 2, game.sim.resolution[1] / 2],
             game_object=Sun,
+            color=pg.Color("yellow"),
         )
 
     def _create_planet():
@@ -61,12 +66,14 @@ def init_game_objects(game, sun_num: int, planet_num: int):
         The position of the planet is generated using the _random_position() function.
         The velocity of the planet is generated using the _random_velocity() function.
         """
-        mass = (10**10) * random.uniform(1, 10) * 10 ** random.randint(1, 10)
+        mass = (10**16) * random.uniform(1, 10) * 10 ** random.randint(1, 5)
+        color = random_green() if mass <= game.player.mass else random_red()
         game.sim.create_object(
             mass=mass,
             position=_random_position(),
             velocity=[_random_velocity(), _random_velocity()],
             game_object=Planet,
+            color=color,
         )
 
     for _ in range(sun_num):
