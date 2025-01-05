@@ -7,7 +7,6 @@
 
 ## TODO
 * Visualize stats
-* Colors depending on mass
 * Set options with config file or settings menu
 * Add different scenarios
 
