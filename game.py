@@ -11,8 +11,6 @@ MOVEMENT_EVENTS_KEYS = {pg.K_DOWN, pg.K_UP, pg.K_RIGHT, pg.K_LEFT}
 
 
 class Game:
-    i = 0
-
     def __init__(self):
         init_game_options(self)
         init_player_object(self)
@@ -39,7 +37,7 @@ class Game:
                     self.player.update_acc(event)
 
             # Update the player's velocity
-            self.sim.objects[self.player.id].update_velocity(self.player.acc, self.sim.timestamp)
+            self.sim.objects[self.player.id].update_velocity(self.player.acc, self.sim.step_size)
 
             # Write players stats
             self.window.blit(self.font.render(f"Mass = {self.player.mass:.1e}", True, pg.Color("white")), (30, 30))

@@ -10,16 +10,17 @@ class Simulation:
     """
 
     objects: list[Type[SpaceObject]]
-    timestamp: int = 2000  # Timestamp in seconds
+    step_size: int  # Step size in seconds
     id = itertools.count()
     max_dist = 3.3 * 10**11
     grav_const = 6.674 * 10 ** (-11)
     resolution = (1920, 1080)
 
-    def __init__(self, grav_const_factor: float = 1):
+    def __init__(self, grav_const_factor: float = 1, step_size: int = 2000):
         """
         Initialize the simulation.
         """
+        self.step_size = step_size
         self.grav_const *= grav_const_factor
         self.objects = []
 
@@ -102,8 +103,8 @@ class Simulation:
         Update the velocity and position of objects based on acceleration.
         """
         for obj, val_x, val_y in zip(self.objects, a_x, a_y):
-            obj.update_velocity(np.array([val_x, val_y]), self.timestamp)
-            obj.update_position(self.timestamp)
+            obj.update_velocity(np.array([val_x, val_y]), self.step_size)
+            obj.update_position(self.step_size)
 
     def run_simulation_step(self):
         """

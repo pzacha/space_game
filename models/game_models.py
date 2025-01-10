@@ -27,11 +27,11 @@ class MassObject:
         self.position = position
         self.velocity = velocity
 
-    def update_velocity(self, acceleration: np.array, timestamp: float):
-        self.velocity = self.velocity + acceleration * timestamp
+    def update_velocity(self, acceleration: np.array, step_size: float):
+        self.velocity = self.velocity + acceleration * step_size
 
-    def update_position(self, timestamp: float):
-        self.position = self.position + self.velocity * timestamp
+    def update_position(self, step_size: float):
+        self.position = self.position + self.velocity * step_size
 
 
 class SpaceObject(MassObject):
