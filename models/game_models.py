@@ -51,7 +51,7 @@ class SpaceObject(MassObject):
         game_pos: Optional[list[int]] = None,
     ):
         super().__init__(id=id, mass=mass, position=position, velocity=velocity)
-        self.radius = math.floor(math.log10(self.mass)) * 1.5
+        self.radius = round(math.log10(self.mass), 1) * 1.5
         self.color = color if color else pg.Color("blue")
         self.game_pos = game_pos if game_pos else [0, 0]
         self.collision_time: Optional[int] = None

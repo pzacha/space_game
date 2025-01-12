@@ -13,7 +13,12 @@ def init_game_options(game):
     """
     pg.init()
     pg.display.set_caption("Test game")
-    game.sim = Simulation(1)
+    game.sim = Simulation(
+        grav_const_factor=game.config.grav_const_factor,
+        step_size=game.config.step_size,
+        resolution=game.config.resolution,
+        max_dist=game.config.max_dist,
+    )
     game.window = pg.display.set_mode(game.sim.resolution)
     game.clock = pg.time.Clock()
     game.timestamp = 0
@@ -30,10 +35,13 @@ def init_player_object(game):
     )
 
 
-def init_game_objects(game, sun_num: int, planet_num: int):
+def init_game_objects(game):
     """
     Initialize game objects by creating a specified number of suns and planets.
     """
+
+    sun_num = game.config.sun_num
+    planet_num = game.config.planet_num
 
     def _random_position():
         """

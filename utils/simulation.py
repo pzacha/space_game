@@ -9,20 +9,22 @@ class Simulation:
     A class to represent the simulation of space objects and their interactions.
     """
 
-    objects: list[Type[SpaceObject]]
-    step_size: int  # Step size in seconds
-    id = itertools.count()
-    max_dist = 3.3 * 10**11
-    grav_const = 6.674 * 10 ** (-11)
-    resolution = (1920, 1080)
-
-    def __init__(self, grav_const_factor: float = 1, step_size: int = 3600):
+    def __init__(
+        self,
+        grav_const_factor: float,
+        step_size: int,
+        resolution: tuple[int],
+        max_dist: float,
+    ):
         """
         Initialize the simulation.
         """
-        self.step_size = step_size
-        self.grav_const *= grav_const_factor
-        self.objects = []
+        self.id = itertools.count()
+        self.grav_const: float = 6.674 * 10 ** (-11) * grav_const_factor
+        self.max_dist: float = max_dist
+        self.step_size: int = step_size  # Step size in seconds
+        self.resolution: tuple[int] = resolution
+        self.objects: list[Type[SpaceObject]] = []
 
     def create_object(
         self,

@@ -1,6 +1,7 @@
 import sys
 import pygame as pg
 
+from models.game_config import GameConfig
 from models.game_models import Spaceship
 from utils.game_mechanics import detect_collisions
 from utils.game_setup import create_solar_system, init_game_objects, init_game_options, init_player_object
@@ -11,11 +12,12 @@ MOVEMENT_EVENTS_KEYS = {pg.K_DOWN, pg.K_UP, pg.K_RIGHT, pg.K_LEFT}
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, config=GameConfig()):
+        self.config = config
         init_game_options(self)
         init_player_object(self)
-        create_solar_system(self)
-        # init_game_objects(self, sun_num=1, planet_num=15)
+        # create_solar_system(self)
+        init_game_objects(self)
 
     def run(self):
         """Main game loop"""
