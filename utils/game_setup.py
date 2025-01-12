@@ -1,4 +1,5 @@
 import random
+import numpy as np
 import pygame as pg
 
 from models.game_models import Planet, Spaceship, Sun
@@ -81,3 +82,41 @@ def init_game_objects(game, sun_num: int, planet_num: int):
         _create_sun()
     for _ in range(planet_num):
         _create_planet()
+
+
+def create_solar_system(game):
+    game.sim.create_object(
+        mass=1.989 * (10**30),
+        position=[game.sim.resolution[0] / 2, game.sim.resolution[1] / 2],
+        game_object=Sun,
+        color=pg.Color("yellow"),
+    )
+    # # Inner planets
+    mercury_position = game.sim.normalize(np.array([-57.9 * (10**9), 0.0]))
+    game.sim.create_object(
+        mass=0.33 * (10**24),
+        position=[mercury_position[0] + game.sim.resolution[0] / 2, mercury_position[1] + game.sim.resolution[1] / 2],
+        velocity=[0, -47400],
+        game_object=Planet,
+    )
+    venus_position = game.sim.normalize(np.array([0.0, 108.2 * (10**9)]))
+    game.sim.create_object(
+        mass=4.87 * (10**24),
+        position=[venus_position[0] + game.sim.resolution[0] / 2, venus_position[1] + game.sim.resolution[1] / 2],
+        velocity=[-35000, 0],
+        game_object=Planet,
+    )
+    earth_position = game.sim.normalize(np.array([0.0, -149.6 * (10**9)]))
+    game.sim.create_object(
+        mass=5.972 * (10**24),
+        position=[earth_position[0] + game.sim.resolution[0] / 2, earth_position[1] + game.sim.resolution[1] / 2],
+        velocity=[29800, 0],
+        game_object=Planet,
+    )
+    mars_position = game.sim.normalize(np.array([227.9 * (10**9), 0.0]))
+    game.sim.create_object(
+        mass=0.642 * (10**24),
+        position=[mars_position[0] + game.sim.resolution[0] / 2, mars_position[1] + game.sim.resolution[1] / 2],
+        velocity=[0, 24100],
+        game_object=Planet,
+    )

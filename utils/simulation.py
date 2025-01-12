@@ -1,5 +1,5 @@
 import itertools
-from typing import Optional, Type
+from typing import Optional, Type, Union
 import numpy as np
 from models.game_models import SpaceObject
 
@@ -16,7 +16,7 @@ class Simulation:
     grav_const = 6.674 * 10 ** (-11)
     resolution = (1920, 1080)
 
-    def __init__(self, grav_const_factor: float = 1, step_size: int = 2000):
+    def __init__(self, grav_const_factor: float = 1, step_size: int = 3600):
         """
         Initialize the simulation.
         """
@@ -27,7 +27,7 @@ class Simulation:
     def create_object(
         self,
         mass: float,
-        position: list[float],
+        position: Union[list[float], np.array],
         velocity: list[float] = [0, 0],
         game_object: Type[SpaceObject] = SpaceObject,
         color: Optional[tuple[int]] = None,
@@ -36,7 +36,8 @@ class Simulation:
         Creates and returns a new object in the simulation.
         """
         id = next(self.id)
-        position = np.array(position, dtype=np.float64) / self.resolution * self.max_dist
+        if type(position) is list:
+            position = np.array(position, dtype=np.float64) / self.resolution * self.max_dist
         velocity = np.array(velocity, dtype=np.float64)
         game_obj = game_object(id, mass, position, velocity, color)
         self.objects.append(game_obj)
@@ -116,7 +117,7 @@ class Simulation:
         a_x, a_y = self.calc_acceleration(force_x, force_y, mass)
         self.update_data(a_x, a_y)
 
-    def normalize(self, position: list[float]):
+    def normalize(self, position: np.array):
         """
         Normalize the position to fit within the resolution.
         """

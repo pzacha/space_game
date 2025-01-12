@@ -3,7 +3,7 @@ import pygame as pg
 
 from models.game_models import Spaceship
 from utils.game_mechanics import detect_collisions
-from utils.game_setup import init_game_objects, init_game_options, init_player_object
+from utils.game_setup import create_solar_system, init_game_objects, init_game_options, init_player_object
 from utils.display import draw_objects
 
 
@@ -14,7 +14,8 @@ class Game:
     def __init__(self):
         init_game_options(self)
         init_player_object(self)
-        init_game_objects(self, sun_num=1, planet_num=15)
+        create_solar_system(self)
+        # init_game_objects(self, sun_num=1, planet_num=15)
 
     def run(self):
         """Main game loop"""
