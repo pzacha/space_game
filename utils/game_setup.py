@@ -106,6 +106,7 @@ def create_solar_system(game):
         position=[mercury_position[0] + game.sim.resolution[0] / 2, mercury_position[1] + game.sim.resolution[1] / 2],
         velocity=[0, -47400],
         game_object=Planet,
+        color=pg.Color("grey"),
     )
     venus_position = game.sim.normalize(np.array([0.0, 108.2 * (10**9)]))
     game.sim.create_object(
@@ -113,6 +114,7 @@ def create_solar_system(game):
         position=[venus_position[0] + game.sim.resolution[0] / 2, venus_position[1] + game.sim.resolution[1] / 2],
         velocity=[-35000, 0],
         game_object=Planet,
+        color=pg.Color("darkgoldenrod3"),
     )
     earth_position = game.sim.normalize(np.array([0.0, -149.6 * (10**9)]))
     game.sim.create_object(
@@ -120,6 +122,7 @@ def create_solar_system(game):
         position=[earth_position[0] + game.sim.resolution[0] / 2, earth_position[1] + game.sim.resolution[1] / 2],
         velocity=[29800, 0],
         game_object=Planet,
+        color=pg.Color("blue"),
     )
     mars_position = game.sim.normalize(np.array([227.9 * (10**9), 0.0]))
     game.sim.create_object(
@@ -127,4 +130,5 @@ def create_solar_system(game):
         position=[mars_position[0] + game.sim.resolution[0] / 2, mars_position[1] + game.sim.resolution[1] / 2],
         velocity=[0, 24100],
         game_object=Planet,
+        color=pg.Color("red"),
     )
