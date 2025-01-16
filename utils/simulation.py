@@ -29,7 +29,7 @@ class Simulation:
     def create_object(
         self,
         mass: float,
-        position: Union[list[float], np.array],
+        position: np.array,
         velocity: list[float] = [0, 0],
         game_object: Type[SpaceObject] = SpaceObject,
         color: Optional[tuple[int]] = None,
@@ -38,8 +38,6 @@ class Simulation:
         Creates and returns a new object in the simulation.
         """
         id = next(self.id)
-        if type(position) is list:
-            position = np.array(position, dtype=np.float64) / self.resolution * self.max_dist
         velocity = np.array(velocity, dtype=np.float64)
         game_obj = game_object(id, mass, position, velocity, color)
         self.objects.append(game_obj)
@@ -123,9 +121,7 @@ class Simulation:
         """
         Normalize the position to fit within the resolution.
         """
-        return int(round(position[0] / self.max_dist * self.resolution[0])), int(
-            round(position[1] / self.max_dist * self.resolution[1])
-        )
+        return tuple(int(round(coord / self.max_dist * min(self.resolution))) for coord in position)
 
     def update_simulation(self):
         """

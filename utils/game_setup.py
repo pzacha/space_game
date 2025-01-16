@@ -30,8 +30,10 @@ def init_player_object(game):
     """
     Initializes the player object in the game.
     """
+    position = [450, 350]
+    position = np.array(position, dtype=np.float64) / min(game.sim.resolution) * game.sim.max_dist
     game.player = game.sim.create_object(
-        mass=10**20, position=[450, 350], game_object=Spaceship, color=pg.Color("white")
+        mass=10**20, position=position, game_object=Spaceship, color=pg.Color("white")
     )
 
 
@@ -47,7 +49,8 @@ def init_game_objects(game):
         """
         Returns a random position within the window.
         """
-        return [random.uniform(0, game.window.get_width()), random.uniform(0, game.window.get_height())]
+        position = [random.uniform(0, game.window.get_width()), random.uniform(0, game.window.get_height())]
+        return np.array(position, dtype=np.float64) / min(game.sim.resolution) * game.sim.max_dist
 
     def _random_velocity():
         """
@@ -61,9 +64,11 @@ def init_game_objects(game):
         Creates a sun in center of the screen.
         """
         mass = 1.989 * (10**30) * random.uniform(1, 10)
+        position = [game.sim.resolution[0] / 2, game.sim.resolution[1] / 2]
+        position = np.array(position, dtype=np.float64) / min(game.sim.resolution) * game.sim.max_dist
         game.sim.create_object(
             mass=mass,
-            position=[game.sim.resolution[0] / 2, game.sim.resolution[1] / 2],
+            position=position,
             game_object=Sun,
             color=pg.Color("yellow"),
         )
@@ -93,41 +98,42 @@ def init_game_objects(game):
 
 
 def create_solar_system(game):
+    position = [game.sim.resolution[0] / 2, game.sim.resolution[1] / 2]
+    position = np.array(position, dtype=np.float64) / min(game.sim.resolution) * game.sim.max_dist
     game.sim.create_object(
         mass=1.989 * (10**30),
-        position=[game.sim.resolution[0] / 2, game.sim.resolution[1] / 2],
+        position=position,
         game_object=Sun,
         color=pg.Color("yellow"),
     )
-    # # Inner planets
-    mercury_position = game.sim.normalize(np.array([-57.9 * (10**9), 0.0]))
+    # Middle of the screen
+    middle = [game.sim.max_dist * game.sim.resolution[0] / game.sim.resolution[1] / 2, game.sim.max_dist / 2]
+
+    # Inner planets
     game.sim.create_object(
         mass=0.33 * (10**24),
-        position=[mercury_position[0] + game.sim.resolution[0] / 2, mercury_position[1] + game.sim.resolution[1] / 2],
+        position=np.array([middle[0] - 57.9 * (10**9), middle[1]]),
         velocity=[0, -47400],
         game_object=Planet,
         color=pg.Color("grey"),
     )
-    venus_position = game.sim.normalize(np.array([0.0, 108.2 * (10**9)]))
     game.sim.create_object(
         mass=4.87 * (10**24),
-        position=[venus_position[0] + game.sim.resolution[0] / 2, venus_position[1] + game.sim.resolution[1] / 2],
+        position=np.array([middle[0], middle[1] + 108.2 * (10**9)]),
         velocity=[-35000, 0],
         game_object=Planet,
         color=pg.Color("darkgoldenrod3"),
     )
-    earth_position = game.sim.normalize(np.array([0.0, -149.6 * (10**9)]))
     game.sim.create_object(
         mass=5.972 * (10**24),
-        position=[earth_position[0] + game.sim.resolution[0] / 2, earth_position[1] + game.sim.resolution[1] / 2],
+        position=np.array([middle[0], middle[1] - 149.6 * (10**9)]),
         velocity=[29800, 0],
         game_object=Planet,
         color=pg.Color("blue"),
     )
-    mars_position = game.sim.normalize(np.array([227.9 * (10**9), 0.0]))
     game.sim.create_object(
         mass=0.642 * (10**24),
-        position=[mars_position[0] + game.sim.resolution[0] / 2, mars_position[1] + game.sim.resolution[1] / 2],
+        position=np.array([middle[0] + 227.9 * (10**9), middle[1]]),
         velocity=[0, 24100],
         game_object=Planet,
         color=pg.Color("red"),
