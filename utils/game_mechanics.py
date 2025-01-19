@@ -1,8 +1,11 @@
-from itertools import combinations
 import math
+import sys
+from itertools import combinations
+
+import pygame as pg
+
 from models.game_models import Planet
 from utils.display import random_green, random_red
-from utils.simulation import Simulation
 
 
 def update_planet_colors(game):
@@ -27,3 +30,16 @@ def detect_collisions(game):
                 other_obj.collision_time = game.timestamp
                 game.sim.delete_object(obj.id)
             update_planet_colors(game)
+
+
+def handle_pygame_inputs(game):
+    """Handle pygame events"""
+    for event in pg.event.get():
+        # If the user closes the window, quit the game
+        if event.type == pg.QUIT:
+            pg.quit()
+            sys.exit()
+        # If a arrow key is pressed or released, update player acceleration
+        if event.type in [pg.KEYDOWN, pg.KEYUP] and event.key in [pg.K_UP, pg.K_DOWN, pg.K_RIGHT, pg.K_LEFT]:
+            game.player.update_acc(event)
+    game.player.modify_velocity_based_on_input(game.sim.step_size)

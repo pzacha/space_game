@@ -1,6 +1,8 @@
 import itertools
-from typing import Optional, Type, Union
+from typing import Optional, Type
+
 import numpy as np
+
 from models.game_models import SpaceObject
 
 
@@ -103,8 +105,8 @@ class Simulation:
         """
         Update the velocity and position of objects based on acceleration.
         """
-        for obj, val_x, val_y in zip(self.objects, a_x, a_y):
-            obj.update_velocity(np.array([val_x, val_y]), self.step_size)
+        for obj, acc_x, acc_y in zip(self.objects, a_x, a_y):
+            obj.update_velocity(np.array([acc_x, acc_y]), self.step_size)
             obj.update_position(self.step_size)
 
     def run_simulation_step(self):

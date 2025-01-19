@@ -1,8 +1,9 @@
-from math import pi
 import math
+from math import pi
 from typing import Optional
-import pygame as pg
+
 import numpy as np
+import pygame as pg
 
 
 class MassObject:
@@ -129,3 +130,6 @@ class Spaceship(SpaceObject):
 
         self.ay = (self.movement[1] - self.movement[0]) * self.power
         self.ax = (self.movement[2] - self.movement[3]) * self.power
+
+    def modify_velocity_based_on_input(self, step_size: float):
+        self.velocity = self.velocity + self.acc * step_size

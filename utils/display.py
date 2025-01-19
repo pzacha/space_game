@@ -1,4 +1,5 @@
 import random
+
 import pygame as pg
 
 from models.game_models import Sun
@@ -34,3 +35,14 @@ def draw_objects(game):
                 draw_collision(game, obj)
             else:
                 pg.draw.circle(game.window, obj.color, obj.game_pos, radius=obj.radius)
+
+
+def draw_game_statistics(game):
+    """
+    Draws the game statistics onto the game window.
+    """
+    game.window.blit(game.font.render(f"Mass = {game.player.mass:.1e}", True, pg.Color("white")), (30, 30))
+    game.window.blit(
+        game.font.render(f"Remaining planets = {len(game.sim.objects) - 2}", True, pg.Color("white")),
+        (30, 65),
+    )
