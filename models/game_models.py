@@ -103,6 +103,9 @@ class Spaceship(SpaceObject):
         self.power = power
         self.ax = 0
         self.ay = 0
+        self.base_mass = mass
+        self.pull = False
+        self.push = False
 
     @property
     def acc(self):
@@ -133,3 +136,20 @@ class Spaceship(SpaceObject):
 
     def modify_velocity_based_on_input(self, step_size: float):
         self.velocity = self.velocity + self.acc * step_size
+
+    def modify_gravity(self, event: pg.event):
+        if event.key == pg.K_SPACE:
+            self.push = True if event.type == pg.KEYDOWN else False
+        if event.key == pg.K_LCTRL:
+            self.pull = True if event.type == pg.KEYDOWN else False
+        if self.pull and self.push:
+            self.pull = False
+            self.push = False
+
+    def modify_mass_based_on_input(self):
+        if self.pull:
+            self.mass *= 1.1
+        elif self.push:
+            self.mass *= -1.1
+        else:
+            self.mass = self.base_mass
