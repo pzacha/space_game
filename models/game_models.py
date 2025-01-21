@@ -147,6 +147,7 @@ class Spaceship(SpaceObject):
             self.push = False
 
     def modify_mass_based_on_input(self):
+        # TODO: Returning to wrong mass
         if self.pull:
             self.mass *= 1.1
         elif self.push:

@@ -4,9 +4,7 @@ from models.game_config import GameConfig
 from models.game_models import Spaceship
 from utils.display import draw_game_statistics, draw_objects
 from utils.game_mechanics import detect_collisions, handle_pygame_inputs
-from utils.game_setup import create_solar_system, init_game_objects, init_game_options, init_player_object
-
-MOVEMENT_EVENTS_KEYS = {pg.K_DOWN, pg.K_UP, pg.K_RIGHT, pg.K_LEFT}
+from utils.game_setup import init_game_objects, init_game_options, init_player_object
 
 
 class Game:
@@ -14,7 +12,6 @@ class Game:
         self.config = config
         init_game_options(self)
         init_player_object(self)
-        # create_solar_system(self)
         init_game_objects(self)
 
     def run(self):

@@ -1,4 +1,5 @@
 import random
+
 import numpy as np
 import pygame as pg
 
@@ -16,14 +17,14 @@ def init_game_options(game):
     game.sim = Simulation(
         grav_const_factor=game.config.grav_const_factor,
         step_size=game.config.step_size,
-        resolution=game.config.resolution,
+        resolution=game.config.display_settings.resolution,
         max_dist=game.config.max_dist,
     )
     game.window = pg.display.set_mode(game.sim.resolution)
     game.clock = pg.time.Clock()
     game.timestamp = 0
     game.fps = 60
-    game.font = pg.font.Font(None, 40)
+    game.font = pg.font.Font(None, game.config.display_settings.font_size)
 
 
 def init_player_object(game):
@@ -38,6 +39,16 @@ def init_player_object(game):
 
 
 def init_game_objects(game):
+    """
+    Initialize game objects.
+    """
+    if game.config.game_mode == "Solar_system":
+        create_solar_system(game)
+    elif game.config.game_mode == "Randomize_planets":
+        randomize_game_objects(game)
+
+
+def randomize_game_objects(game):
     """
     Initialize game objects by creating a specified number of suns and planets.
     """
