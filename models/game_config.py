@@ -15,19 +15,19 @@ class DisplaySettings:
         resolution: tuple[int] = (1920, 1080),
         font_size: int = 40,
         animate_sun: bool = True,
-        draw_colissions: bool = True,
+        draw_collisions: bool = True,
     ):
         self.resolution = resolution
         self.font_size = font_size
         self.animate_sun = animate_sun
-        self.draw_colissions = draw_colissions
+        self.draw_collisions = draw_collisions
 
 
 class PlayerSettings:
     def __init__(
         self,
         color: pg.Color = pg.Color("white"),
-        push_pull: bool = True,
+        push_pull: bool = False,
     ):
         self.color = color
         self.push_pull = push_pull
