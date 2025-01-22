@@ -33,6 +33,16 @@ class PlayerSettings:
         self.push_pull = push_pull
 
 
+class PlayerSettings:
+    def __init__(
+        self,
+        color: pg.Color = pg.Color("white"),
+        push_pull: bool = True,
+    ):
+        self.color = color
+        self.push_pull = push_pull
+
+
 class GameConfig:
     def __init__(
         self,
