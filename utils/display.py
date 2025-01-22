@@ -36,7 +36,7 @@ def draw_objects(game):
             else:
                 pg.draw.circle(game.window, pg.Color("yellow"), obj.game_pos, radius=obj.radius)
         else:
-            if obj.collision_time:
+            if obj.collision_time and game.config.display_settings.draw_collisions:
                 draw_collision(game, obj)
             else:
                 pg.draw.circle(game.window, obj.color, obj.game_pos, radius=obj.radius)

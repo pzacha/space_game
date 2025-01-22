@@ -34,7 +34,7 @@ def init_player_object(game):
     position = [450, 350]
     position = np.array(position, dtype=np.float64) / min(game.sim.resolution) * game.sim.max_dist
     game.player = game.sim.create_object(
-        mass=10**20, position=position, game_object=Spaceship, color=pg.Color("white")
+        mass=10**20, position=position, game_object=Spaceship, color=game.config.player_settings.color
     )
 
 

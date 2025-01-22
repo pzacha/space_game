@@ -1,6 +1,8 @@
 from enum import StrEnum
 from typing import Optional
 
+import pygame as pg
+
 
 class GameMode(StrEnum):
     SOLAR_SYSTEM = "Solar_system"
@@ -13,10 +15,22 @@ class DisplaySettings:
         resolution: tuple[int] = (1920, 1080),
         font_size: int = 40,
         animate_sun: bool = True,
+        draw_colissions: bool = True,
     ):
         self.resolution = resolution
         self.font_size = font_size
         self.animate_sun = animate_sun
+        self.draw_colissions = draw_colissions
+
+
+class PlayerSettings:
+    def __init__(
+        self,
+        color: pg.Color = pg.Color("white"),
+        push_pull: bool = True,
+    ):
+        self.color = color
+        self.push_pull = push_pull
 
 
 class GameConfig:
@@ -29,6 +43,7 @@ class GameConfig:
         step_size: int = 3600,
         game_mode: GameMode = GameMode.RANDOMIZE_PLANETS,
         display_settings: Optional[DisplaySettings] = None,
+        player_settings: Optional[PlayerSettings] = None,
     ):
         self.sun_num = sun_num
         self.planet_num = planet_num
@@ -37,3 +52,4 @@ class GameConfig:
         self.step_size = step_size
         self.game_mode = game_mode
         self.display_settings = display_settings if display_settings else DisplaySettings()
+        self.player_settings = player_settings if player_settings else PlayerSettings()

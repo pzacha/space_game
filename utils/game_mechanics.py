@@ -42,8 +42,10 @@ def handle_pygame_inputs(game):
         # If a arrow key is pressed or released, update player acceleration
         if event.type in [pg.KEYDOWN, pg.KEYUP] and event.key in [pg.K_UP, pg.K_DOWN, pg.K_RIGHT, pg.K_LEFT]:
             game.player.update_acc(event)
+        # If the player presses space or left control, modify mass
         if event.type in [pg.KEYDOWN, pg.KEYUP] and event.key in [pg.K_SPACE, pg.K_LCTRL]:
-            game.player.modify_gravity(event)
+            if game.config.player_settings.push_pull:
+                game.player.modify_gravity(event)
 
     game.player.modify_velocity_based_on_input(game.sim.step_size)
     game.player.modify_mass_based_on_input()
