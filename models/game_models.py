@@ -152,5 +152,3 @@ class Spaceship(SpaceObject):
             self.mass *= 1.1
         elif self.push:
             self.mass *= -1.1
-        else:
-            self.mass = self.base_mass

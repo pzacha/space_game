@@ -22,7 +22,7 @@ class Game:
             draw_objects(self)
 
             self.sim.update_simulation()
-            detect_collisions(self)
+            # detect_collisions(self)
             handle_pygame_inputs(self)
             draw_game_statistics(self)
 

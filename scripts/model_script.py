@@ -1,5 +1,37 @@
 import numpy as np
 
+GRAV_CONST = 1
+
+
+class SpaceObject:
+    def __init__(self, mass: int, position: list[float] = [0, 0]):
+        self.mass = mass
+        self.position = position
+
+
+object1 = SpaceObject(10, [0, 0])
+object2 = SpaceObject(100, [3, 4])
+object3 = SpaceObject(1, [1, 1])
+
+sum_force = 0
+sum_force_x = 0
+sum_force_y = 0
+
+for obj in [object2, object3]:
+    distance = np.sqrt((obj.position[0] - object1.position[0]) ** 2 + (obj.position[1] - object1.position[1]) ** 2)
+    force = GRAV_CONST * object1.mass * obj.mass / (distance**2)
+    force_x = force * (obj.position[0] - object1.position[0]) / distance
+    force_y = force * (obj.position[1] - object1.position[1]) / distance
+    print(force_x, force_y, force)
+    sum_force += force
+    sum_force_x += force_x
+    sum_force_y += force_y
+
+
+print(sum_force_x, sum_force_y, sum_force)
+
+
+import numpy as np
 
 GRAV_CONST = 1
 
@@ -41,3 +73,10 @@ print(forces_x)
 print(forces_y)
 sum_forces, sum_force_x, sum_force_y = forces.sum(axis=0), forces_x.sum(axis=0), forces_y.sum(axis=0)
 print(sum_forces, sum_force_x, sum_force_y)
+
+
+"""
+Rozbiłem problem na dwie osie oddzielnie aby nie musieć korzystać z macierzy.
+Jest tu wiele pola do optymalizacji - np. trzymanie wszystkich wartosci w wektorach zamiast oddzielnych klas.
+Trzeba uważać na castowanie typu - error z intem i float64.
+"""
