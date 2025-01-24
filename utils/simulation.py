@@ -78,15 +78,11 @@ class Simulation:
         Calculate the gravitational force between objects.
         np.divide is used to assign 0 to output when division by 0 happens
         """
-        forces = (
-            self.grav_const
-            * np.divide(
-                np.outer(mass, mass),
-                dr**2,
-                out=np.zeros_like(np.outer(mass, mass)),
-                where=dr != 0,
-            )
-            * (np.divide(dr, abs(dr), out=np.zeros_like(dr), where=abs(dr) != 0))
+        forces = self.grav_const * np.divide(
+            np.outer(mass, mass),
+            dr**2,
+            out=np.zeros_like(np.outer(mass, mass)),
+            where=dr != 0,
         )
         forces_x = np.divide(forces * dx, dr, out=np.zeros_like(np.outer(mass, mass)), where=dr != 0)
         forces_y = np.divide(forces * dy, dr, out=np.zeros_like(np.outer(mass, mass)), where=dr != 0)
