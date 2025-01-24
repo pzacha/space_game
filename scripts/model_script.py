@@ -56,15 +56,11 @@ dx = np.subtract.outer(x_pos, x_pos)
 dy = np.subtract.outer(y_pos, y_pos)
 distance = np.sqrt(dx**2 + dy**2)
 
-forces = (
-    GRAV_CONST
-    * np.divide(
-        np.outer(mass, mass),
-        distance**2,
-        out=np.zeros_like(np.outer(mass, mass)),
-        where=distance != 0,
-    )
-    * (np.divide(distance, abs(distance), out=np.zeros_like(distance), where=abs(distance) != 0))
+forces = GRAV_CONST * np.divide(
+    np.outer(mass, mass),
+    distance**2,
+    out=np.zeros_like(np.outer(mass, mass)),
+    where=distance != 0,
 )
 forces_x = np.divide(forces * dx, distance, out=np.zeros_like(np.outer(mass, mass)), where=distance != 0)
 forces_y = np.divide(forces * dy, distance, out=np.zeros_like(np.outer(mass, mass)), where=distance != 0)
