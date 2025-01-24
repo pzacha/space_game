@@ -14,7 +14,7 @@ class DisplaySettings:
         self,
         resolution: tuple[int] = (1920, 1080),
         font_size: int = 40,
-        draw_collisions: bool = True,
+        draw_collisions: bool = False,
         animate_sun: bool = False,
     ):
         self.resolution = resolution
@@ -33,25 +33,15 @@ class PlayerSettings:
         self.push_pull = push_pull
 
 
-class PlayerSettings:
-    def __init__(
-        self,
-        color: pg.Color = pg.Color("white"),
-        push_pull: bool = False,
-    ):
-        self.color = color
-        self.push_pull = push_pull
-
-
 class GameConfig:
     def __init__(
         self,
         sun_num: int = 1,
-        planet_num: int = 0,
+        planet_num: int = 10,
         grav_const_factor: float = 1,
         max_dist: float = 3.3 * (10**11),
         step_size: int = 3600,
-        game_mode: GameMode = GameMode.RANDOMIZE_PLANETS,
+        game_mode: GameMode = GameMode.SOLAR_SYSTEM,
         display_settings: Optional[DisplaySettings] = None,
         player_settings: Optional[PlayerSettings] = None,
     ):

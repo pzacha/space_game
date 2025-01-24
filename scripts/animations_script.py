@@ -31,7 +31,7 @@ def eight(progress):
 
 
 # POINTS = 10000
-# for it in range(10000):
+# for it in range(POINTS):
 #     progress = it / POINTS
 #     pygame.draw.circle(
 #         screen,
@@ -47,11 +47,12 @@ def eight(progress):
 ### ANIMATION
 
 
-FPS = 30
+FPS = 60
 DURATION = 3
 FRAMES = FPS * DURATION  # 90
-
 # clock = pygame.time.Clock()
+
+
 # frame = 0
 # while frame <= FRAMES:
 #     clock.tick(FPS)
@@ -181,7 +182,7 @@ T = 30  # Number of full rotations
 
 
 # FPS = 60
-# DURATION = 3
+# DURATION = 10
 # FRAMES = FPS * DURATION
 
 # clock = pygame.time.Clock()
@@ -194,9 +195,9 @@ T = 30  # Number of full rotations
 #     screen.fill(BLACK)  # Clear previous drawing.
 
 #     alpha = frame / FRAMES
-#     # Draw 1000 points over the morphed figure.
-#     for i in range(1000):
-#         progress = i / 1000
+#     # Draw 10000 points over the morphed figure.
+#     for i in range(10000):
+#         progress = i / 10000
 #         pygame.draw.circle(
 #             screen,
 #             WHITE,
