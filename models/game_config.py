@@ -27,7 +27,7 @@ class PlayerSettings:
     def __init__(
         self,
         color: pg.Color = pg.Color("white"),
-        push_pull: bool = False,
+        push_pull: bool = True,
     ):
         self.color = color
         self.push_pull = push_pull

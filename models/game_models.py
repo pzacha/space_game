@@ -11,11 +11,6 @@ class MassObject:
     Represents a physical object with mass, position, and velocity in space.
     """
 
-    id: int
-    mass: float
-    position: np.array
-    velocity: np.array
-
     def __init__(
         self,
         id: int,
@@ -24,9 +19,13 @@ class MassObject:
         velocity: np.array = np.array([0, 0], dtype=np.float64),
     ):
         self.id = id
-        self.mass = mass
+        self._mass = mass
         self.position = position
         self.velocity = velocity
+
+    @property
+    def mass(self):
+        return self._mass
 
     def update_velocity(self, acceleration: np.array, step_size: float):
         self.velocity = self.velocity + acceleration * step_size
@@ -39,8 +38,6 @@ class SpaceObject(MassObject):
     """
     A class to represent a space object in the game.
     """
-
-    game_pos: list[int]
 
     def __init__(
         self,
@@ -98,18 +95,23 @@ class Spaceship(SpaceObject):
         color: Optional[tuple[int]] = None,
         power: float = 1,
     ):
+        self.grav_modifier = 1
+        self.grav_modifier_limit = 10**6
         super().__init__(id=id, mass=mass, position=position, velocity=velocity, color=color)
         self.movement = [0, 0, 0, 0]
         self.power = power
         self.ax = 0
         self.ay = 0
-        self.base_mass = mass
         self.pull = False
         self.push = False
 
     @property
     def acc(self):
         return np.array([self.ax, self.ay], dtype=np.float64)
+
+    @property
+    def mass(self):
+        return self._mass * self.grav_modifier
 
     def update_acc(self, event: pg.event) -> np.array:
         if event.type == pg.KEYDOWN:
@@ -147,8 +149,11 @@ class Spaceship(SpaceObject):
             self.push = False
 
     def modify_mass_based_on_input(self):
-        # TODO: Returning to wrong mass
         if self.pull:
-            self.mass *= 1.1
+            self.grav_modifier *= 2 if abs(self.grav_modifier) < self.grav_modifier_limit else 1
         elif self.push:
-            self.mass *= -1.1
+            self.grav_modifier = (
+                abs(self.grav_modifier) * -2 if abs(self.grav_modifier) < self.grav_modifier_limit else -1
+            )
+        else:
+            self.grav_modifier = 1
