@@ -121,6 +121,13 @@ class Simulation:
         """
         return tuple(int(round(coord / self.max_dist * min(self.resolution))) for coord in position)
 
+    def delete_far_objects(self, obj: Type[SpaceObject]):
+        """
+        Delete objects that are too far away.
+        """
+        if abs(max(obj.position)) > 4 * self.max_dist:
+            self.delete_object(obj.id)
+
     def update_simulation(self):
         """
         Run a simulation step and update objects screen positions.
@@ -128,3 +135,4 @@ class Simulation:
         self.run_simulation_step()
         for obj in self.objects:
             obj.game_pos[0], obj.game_pos[1] = self.normalize(obj.position)
+            self.delete_far_objects(obj)
