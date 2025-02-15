@@ -1,3 +1,4 @@
+import math
 import random
 
 import numpy as np
@@ -32,7 +33,6 @@ def init_player_object(game):
     Initializes the player object in the game.
     """
     position = [450, 350]
-    position = np.array(position, dtype=np.float64) / min(game.sim.resolution) * game.sim.max_dist
     game.player = game.sim.create_object(
         mass=10**20, position=position, game_object=Spaceship, color=game.config.player_settings.color
     )
@@ -56,33 +56,23 @@ def randomize_game_objects(game):
     sun_num = game.config.sun_num
     planet_num = game.config.planet_num
 
-    def _random_position():
+    def _random_position() -> list[float]:
         """
         Returns a random position within the window.
         """
-        position = [random.uniform(0, game.window.get_width()), random.uniform(0, game.window.get_height())]
-        return np.array(position, dtype=np.float64) / min(game.sim.resolution) * game.sim.max_dist
+        return [random.uniform(0, game.window.get_width()), random.uniform(0, game.window.get_height())]
 
-    def _random_velocity():
+    def _random_velocity(position: list[float]) -> list[float]:
         """
-        Returns a random velocity.
+        Returns a random velocity not larger than escape velocity.
         """
-
-        return random.choice([1, -1]) * random.uniform(1, 10) * 10 ** random.randint(2, 5)
-
-    def _create_sun():
-        """
-        Creates a sun in center of the screen.
-        """
-        mass = 1.989 * (10**30) * random.uniform(1, 10)
-        position = [game.sim.resolution[0] / 2, game.sim.resolution[1] / 2]
-        position = np.array(position, dtype=np.float64) / min(game.sim.resolution) * game.sim.max_dist
-        game.sim.create_object(
-            mass=mass,
-            position=position,
-            game_object=Sun,
-            color=pg.Color("yellow"),
-        )
+        sun_masses = sum([obj.mass for obj in game.sim.objects if type(obj) == Sun])
+        escape_vel = math.sqrt(2 * game.sim.grav_const * sun_masses / (game.sim.max_dist / 4))
+        vel_x = random.uniform(1, escape_vel)
+        vel_y = random.uniform(1, math.sqrt(escape_vel**2 - vel_x**2))
+        vel_x *= 1 if position[0] < game.sim.resolution[0] / 2 else -1
+        vel_y *= 1 if position[1] < game.sim.resolution[1] / 2 else -1
+        return [vel_x, vel_y]
 
     def _create_planet():
         """
@@ -94,12 +84,27 @@ def randomize_game_objects(game):
         """
         mass = (10**16) * random.uniform(1, 10) * 10 ** random.randint(1, 5)
         color = random_green() if mass <= game.player.mass else random_red()
+        position = _random_position()
+        velocity = _random_velocity(position)
         game.sim.create_object(
             mass=mass,
-            position=_random_position(),
-            velocity=[_random_velocity(), _random_velocity()],
+            position=position,
+            velocity=velocity,
             game_object=Planet,
             color=color,
+        )
+
+    def _create_sun():
+        """
+        Creates a sun in center of the screen.
+        """
+        mass = 1.989 * (10**30) * random.uniform(1, 10)
+        position = [game.sim.resolution[0] / 2, game.sim.resolution[1] / 2]
+        game.sim.create_object(
+            mass=mass,
+            position=position,
+            game_object=Sun,
+            color=pg.Color("yellow"),
         )
 
     for _ in range(sun_num):

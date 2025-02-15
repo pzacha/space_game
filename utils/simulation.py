@@ -41,6 +41,7 @@ class Simulation:
         """
         id = next(self.id)
         velocity = np.array(velocity, dtype=np.float64)
+        position = np.array(position, dtype=np.float64) / min(self.resolution) * self.max_dist
         game_obj = game_object(id, mass, position, velocity, color)
         self.objects.append(game_obj)
         return game_obj
