@@ -37,7 +37,7 @@ class GameConfig:
     def __init__(
         self,
         sun_num: int = 1,
-        planet_num: int = 6,
+        planet_num: int = 1,
         grav_const_factor: float = 1,
         max_dist: float = 3.3 * (10**11),
         step_size: int = 3600,

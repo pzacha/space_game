@@ -64,14 +64,22 @@ def randomize_game_objects(game):
 
     def _random_velocity(position: list[float]) -> list[float]:
         """
-        Returns a random velocity not larger than escape velocity.
+        Returns a random velocity not larger than escape velocity. Velocity vector is perpendicular to the position vector.
         """
         sun_masses = sum([obj.mass for obj in game.sim.objects if type(obj) == Sun])
-        escape_vel = math.sqrt(2 * game.sim.grav_const * sun_masses / (game.sim.max_dist / 4))
-        vel_x = random.uniform(1, escape_vel)
-        vel_y = random.uniform(1, math.sqrt(escape_vel**2 - vel_x**2))
-        vel_x *= 1 if position[0] < game.sim.resolution[0] / 2 else -1
-        vel_y *= 1 if position[1] < game.sim.resolution[1] / 2 else -1
+        escape_vel = math.sqrt(2 * game.sim.grav_const * sun_masses / (game.sim.max_dist / 8))
+        velocity = random.uniform(escape_vel / 2, escape_vel)
+        pos_x = position[0] - game.sim.resolution[0] / 2
+        pos_y = position[1] - game.sim.resolution[1] / 2
+        if pos_x != pos_y:
+            vel_y = pos_x * velocity / math.sqrt(pos_y**2 + pos_x**2)
+            vel_x = math.sqrt(velocity**2 - vel_y**2)
+        else:
+            vel_x = vel_y = velocity * math.sqrt(2)
+
+        vel_x *= 1 if pos_x < 0 else -1
+        vel_y *= 1 if pos_y < 0 else -1
+
         return [vel_x, vel_y]
 
     def _create_planet():
