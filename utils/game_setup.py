@@ -66,11 +66,15 @@ def randomize_game_objects(game):
         """
         Returns a random velocity not larger than escape velocity. Velocity vector is perpendicular to the position vector.
         """
-        sun_masses = sum([obj.mass for obj in game.sim.objects if type(obj) == Sun])
-        escape_vel = math.sqrt(2 * game.sim.grav_const * sun_masses / (game.sim.max_dist / 8))
-        velocity = random.uniform(escape_vel / 2, escape_vel)
         pos_x = position[0] - game.sim.resolution[0] / 2
         pos_y = position[1] - game.sim.resolution[1] / 2
+        distance_from_center = math.sqrt(
+            (pos_x * game.sim.max_dist / min(game.sim.resolution) / 2) ** 2
+            + (pos_y * game.sim.max_dist / min(game.sim.resolution) / 2) ** 2
+        )
+        sun_masses = sum([obj.mass for obj in game.sim.objects if type(obj) == Sun])
+        escape_vel = math.sqrt(2 * game.sim.grav_const * sun_masses / (distance_from_center))
+        velocity = random.uniform(escape_vel * 0.4, escape_vel * 0.8)
         if pos_x != pos_y:
             vel_y = pos_x * velocity / math.sqrt(pos_y**2 + pos_x**2)
             vel_x = math.sqrt(velocity**2 - vel_y**2)
