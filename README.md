@@ -1,4 +1,4 @@
-# Space game
+# Solar System model with gaming elements.
 > 2D gravitational model of the Solar System with gaming elements, allowing users to simulate and visualize the motion of celestial objects.
 
 ![gif](/docs/preview.gif)
